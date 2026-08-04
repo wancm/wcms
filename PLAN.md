@@ -14,12 +14,13 @@ src/
 │
 ├── ContentImporter.Domain/               → (no project references)
 │   ├── Entities/                         ContentItem
-│   ├── ValueObjects/                     ContentId, LanguageTag, ContentType
-│   └── Events/                           ContentImported, ImportCompleted
+│   ├── ValueObjects/                     ExternalReference, LanguageTag, ContentType
+│   └── Results/                          Result<T>, DomainError
 │
 ├── ContentImporter.Application/          → Domain
 │   ├── Importing/                        ContentImportService, ImportOptions,
 │   │                                     ImportResult, ImportError, ImportContext
+│   ├── Events/                           ContentImported, ImportCompleted
 │   ├── Providers/                        ProviderCode, ISourceProviderAdapter,
 │   │                                     SourceProviderAdapter<TDto>, IProviderAdapterRegistry
 │   ├── Canonical/                        SourceRecord, CanonicalContent
@@ -113,6 +114,14 @@ are the three candidates, written up in the ADR.
 
 `ImportOptions` therefore stays at two knobs: `MaxDegreeOfParallelism`, `ChannelCapacity`.
 
+**Change detection** is out too. Upsert by `ExternalReference` makes re-import idempotent *in
+storage*, but the pipeline still publishes `ContentImported` for every item — so re-running an
+Export notifies Upstream Systems about content that did not change. That is survivable, since
+at-least-once delivery with idempotent consumers is the normal contract, but the claim "the
+import is idempotent" needs the qualifier said out loud. The fix — a content fingerprint on
+`ContentItem`, an upsert that reports Inserted/Updated/Unchanged, and publishing only on change —
+is written up in a comment on `ContentItem` rather than built.
+
 ## The generic bridge — the one genuinely tricky bit
 
 `TDto` differs per provider (`WordPressPostDto`, `LegacyArticleDto`, …). The pipeline holds a
@@ -183,7 +192,7 @@ Each step: **I design it → you write the skeleton → I review → repeat → 
 | # | Step | Notes |
 |---|---|---|
 | 0 | ✅ Scaffold | 5 projects, `Directory.Build.props`, the architecture test |
-| 1 | Domain | `ContentItem`, value objects, the two events |
+| 1 | Domain | `ContentItem`, the three value objects, `Result<T>` |
 | 2 | Application model | `SourceRecord`, `CanonicalContent`, `ProviderCode`, `ValidationResult`, `ImportOptions/Result/Error` |
 | 3 | Ports + generic bridge | The interfaces, `SourceProviderAdapter<TDto>`, the registry |
 | 4 | Repository | `InMemoryContentRepository` |
@@ -232,8 +241,11 @@ Each step: **I design it → you write the skeleton → I review → repeat → 
    had 12 failures out of 100,000 either loses those 12 forever or re-imports 99,988 records.
 2. **`IEventPublisher` vs `IUpstreamNotifier`** — the brief says *"upstream systems must be notified"*.
    `CONTEXT.md` settles the concept as **Upstream System**; the port name should probably follow.
-3. **`ContentImported` / `ImportCompleted` in `Domain/Events/`?** They cross the system boundary to
-   Upstream Systems, which makes them integration events, not domain events.
+3. ~~**`ContentImported` / `ImportCompleted` in `Domain/Events/`?**~~ Resolved: both live in
+   `Application/Events/`. `ImportCompleted` carries counts and a duration, which describes an
+   Import Run — an application process, not a content concept. `ContentImported` addresses systems
+   outside our boundary; domain events exist to coordinate inside it, and there is no in-boundary
+   consumer to justify collect-and-drain machinery on the aggregate.
 4. **Does the repository expose `IQueryable`?** In tension with "easy DB change" — `IQueryable` leaks
    what a given provider can and can't translate.
 5. **Source fails mid-stream** (truncated Export at record 40k of 100k) — throw, or return a partial
