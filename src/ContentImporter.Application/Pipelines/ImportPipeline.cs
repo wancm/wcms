@@ -1,4 +1,5 @@
 ﻿using ContentImporter.Application.ContentProviders.ContentSource;
+using ContentImporter.Application.Notifications;
 using ContentImporter.Application.Publishers;
 using ContentImporter.Application.Repositories;
 using ContentImporter.Domain.Entities;
@@ -8,7 +9,10 @@ using System.Diagnostics;
 
 namespace ContentImporter.Application.Pipelines
 {
-    public class ImportPipeline(ContentImporterChannel channel, IContentRepository repository)
+    public class ImportPipeline(
+        ContentImporterChannel channel,
+        IContentRepository repository,
+        IUpstreamNotifier notifier)
     {
         public async Task<ImportResult> RunAsync(IContentSource source, ILogger logger, CancellationToken cancellationToken = default)
         {
@@ -21,9 +25,9 @@ namespace ContentImporter.Application.Pipelines
 
                 var stopwatch = Stopwatch.StartNew();
 
-                //--- Content Item Processing ----------------------------------------------------------------------------------------------
+                //--- Content item processing -------------------------------------------------------
 
-                Console.WriteLine("Content item processing started.");
+                logger.LogInformation("Import {EventId} started.", eventId);
 
                 var counters = new ImportCounters();
 
@@ -34,76 +38,49 @@ namespace ContentImporter.Application.Pipelines
 
                 var producer = ChannelProducer.ProduceAsync(eventId, source, channel.Writer, errors, cancellationToken);
 
-                // todo: AI to rewrite better comments.
-                // for now, we focus on speed and performance.
-                // potential concurrency issues here, one of the biggest issue is parent-child dependencies.
-                // example: A full page consits of few child components, if the parent page is processed before the child components,
-                // it can lead to broken page upon the page rendering or even errors during the import process.
+                // One worker per core, all draining the same channel. Items are independent, so
+                // order is not preserved and does not need to be - except in one case worth
+                // knowing about: a page whose layout references a child component would need its
+                // children imported first. Nothing here enforces that, which is why the repository
+                // upserts by id rather than assuming anything about the order items arrive in.
                 var consumers = new Task[ImportPipelineOptions.Default.MaxDegreeOfParallelism];
                 for (var i = 0; i < consumers.Length; i++)
                 {
                     var consumer = new ChannelConsumer();
 
-                    consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, repository, cancellationToken);
+                    consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, repository, notifier, cancellationToken);
                 }
 
-                // we wait for all the consumers and producer to complete.
-                // it will ends when the producer has completed and all the consumers have completed processing all the items in the channel.
-                // source content is exhausted, and all the items have been processed by the consumers.
+                // Finishes when the producer has read the whole source and every consumer has
+                // drained what it wrote. Completing the writer is what lets the consumers stop.
                 await Task.WhenAll(consumers.Append(producer)).ConfigureAwait(false);
 
-                Console.WriteLine("Content item processing completed.");
+                //--- Publishing --------------------------------------------------------------------
 
-                //--- Publishing ----------------------------------------------------------------------------------------------
-
-                // Note:
-                // Pushling the content items actually shall be included into the consumer above to run together with the pipeline,
-                // but for the sake of demonstrate threadsafe collection, I do it in a separate step.
-                Console.WriteLine("Publishing started.");
-
-                // Publish content items
+                // Publishing belongs inside the consumer loop above, and in a real pipeline it
+                // would be there. It is a separate pass here to show a second concurrency shape:
+                // Parallel.ForEachAsync over a fixed collection, with a ConcurrentDictionary
+                // de-duplicating and an event raised from many threads at once.
                 var publisher = new ContentPublisher(ImportPipelineOptions.Default.MaxDegreeOfParallelism);
 
-                // Thread-safe collection used by the event subscriber.
+                // ConcurrentQueue because this handler runs on every worker thread at once.
                 var auditLog = new ConcurrentQueue<string>();
 
-                // Subscribe to the ContentPublished event.
                 publisher.ContentPublished += (_, eventArgs) =>
-                {
-                    // This event handler may be called by multiple worker threads.
-                    auditLog.Enqueue(
-                        $"Imported {eventArgs.Content.Id} " +
-                        $"on thread {Environment.CurrentManagedThreadId}" +
-                        $"on Event {eventId}");
-                };
+                    auditLog.Enqueue($"{eventArgs.Content.Id} published on thread {Environment.CurrentManagedThreadId}");
 
-                // Publish the content items concurrently.
-                await publisher.PublishAsync(persistedContentItems);
-
-                Console.WriteLine("Publishing completed.");
-                Console.WriteLine();
+                await publisher.PublishAsync(persistedContentItems, cancellationToken).ConfigureAwait(false);
 
                 stopwatch.Stop();
 
-                if (auditLog.Count > 0)
+                foreach (string entry in auditLog)
                 {
-                    Console.WriteLine("Audit log:");
-                    foreach (var logEntry in auditLog)
-                    {
-                        logger.LogInformation($"EventId={eventId}: {logEntry}");
-                        Console.WriteLine(logEntry);
-                    }
+                    logger.LogDebug("Import {EventId}: {Entry}", eventId, entry);
                 }
 
-                if (errors.Count > 0)
+                foreach (ImportError error in errors)
                 {
-                    Console.WriteLine();
-                    Console.WriteLine("Errors:");
-                    foreach (var error in errors)
-                    {
-                        logger.LogError($"EventId={eventId}: {error.CorrelationId} - {error.Message}");
-                        Console.WriteLine(error);
-                    }
+                    logger.LogError("Import {EventId}: {CorrelationId} - {Message}", eventId, error.CorrelationId, error.Message);
                 }
 
                 var result = new ImportResult(
@@ -111,6 +88,17 @@ namespace ContentImporter.Application.Pipelines
                     errors.Count,
                     errors.ToArray(),
                     stopwatch.Elapsed);
+
+                // The run-level event, sent once whatever happened - including when items failed.
+                await notifier.NotifyAsync(
+                    new ImportCompleted
+                    {
+                        EventId = eventId,
+                        Imported = result.Imported,
+                        Failed = result.Failed,
+                        Duration = result.Duration
+                    },
+                    cancellationToken).ConfigureAwait(false);
 
                 return result;
             }

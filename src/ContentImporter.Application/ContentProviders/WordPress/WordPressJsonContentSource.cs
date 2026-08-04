@@ -29,9 +29,11 @@ namespace ContentImporter.Application.ContentProviders.WordPress
         /// SourceContentItem per item.
         /// </summary>
         /// <remarks>
-        /// Files are read oldest first, so when two exports carry the same post the newer one is
-        /// written last and wins the repository's upsert. Name breaks ties, because files copied
-        /// or unzipped together often share a timestamp.
+        /// Files are read in name order, and the last one read wins the repository's upsert - so
+        /// the file name is the contract for which export supersedes which. Not modification time:
+        /// uploaded files are all written at once and would share a timestamp, leaving the order
+        /// to chance. Names sort as text, so number them zero-padded (01, 02) - "10" sorts before
+        /// "2" otherwise.
         /// </remarks>
         public async IAsyncEnumerable<SourceContentItem> ReadAsync(
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
@@ -43,8 +45,7 @@ namespace ContentImporter.Application.ContentProviders.WordPress
 
             var exports = new DirectoryInfo(_exportFolder)
                 .GetFiles("*.json")
-                .OrderBy(file => file.LastWriteTimeUtc)
-                .ThenBy(file => file.Name, StringComparer.Ordinal);
+                .OrderBy(file => file.Name, StringComparer.Ordinal);
 
             foreach (FileInfo export in exports)
             {

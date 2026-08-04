@@ -3,8 +3,7 @@ using System.Reflection;
 namespace ContentImporter.Tests;
 
 /// <summary>
-/// Guards the layering described in docs/adr/0001-four-projects-three-tiers.md, but only where
-/// the build cannot guard it already.
+/// Guards the solution's layering, but only where the build cannot guard it already.
 /// </summary>
 /// <remarks>
 /// <para>
@@ -36,10 +35,10 @@ public sealed class ArchitectureTests
     /// </summary>
     /// <remarks>
     /// Serialization used to be on this list, and deliberately is not any more. Provider adapters
-    /// live in Application by design (ADR 0001) — reading a customer's export is what the
-    /// application layer is *for* — and an adapter that may not name its own wire format is not an
-    /// adapter. Transport and storage are different: those are resources the process connects to,
-    /// and swapping them must not recompile Application.
+    /// live in Application by design — reading a customer's export is what the application layer
+    /// is *for* — and an adapter that may not name its own wire format is not an adapter.
+    /// Transport and storage are different: those are resources the process connects to, and
+    /// swapping them must not recompile Application.
     /// </remarks>
     private static readonly string[] TransportAndStorage =
     [

@@ -58,11 +58,9 @@ namespace ContentImporter.Application.Publishers
             ContentItem content,
             CancellationToken cancellationToken)
         {
-            Console.WriteLine(
-                $"Publishing {content.Id} on thread ......" +
-                $"{Environment.CurrentManagedThreadId}");
-
-            // Simulate database or API work to publish the content.
+            // Simulate database or API work to publish the content. The variable delay is what
+            // makes the parallelism visible downstream: without it the work finishes too fast
+            // for any two items to overlap.
             await Task.Delay(
                 Random.Shared.Next(100, 500),
                 cancellationToken);

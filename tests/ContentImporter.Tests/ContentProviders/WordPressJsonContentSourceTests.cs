@@ -56,26 +56,24 @@ public sealed class WordPressJsonContentSourceTests : IDisposable
     }
 
     [Fact]
-    public async Task Older_exports_are_read_before_newer_ones()
+    public async Task Exports_are_read_in_name_order()
     {
-        // Names sort the other way on purpose: if this passed on name order it would prove nothing.
-        WriteExport("zzz-older.json", new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), 1);
-        WriteExport("aaa-newer.json", new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc), 2);
+        // The name decides which export supersedes which, so the last one read wins the upsert.
+        WriteExport("word-press-02.json", new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), 2);
+        WriteExport("word-press-01.json", new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), 1);
 
         List<SourceContentItem> items = await ReadAllAsync();
 
-        // Oldest first, so the newest export is written last and wins the upsert downstream.
         Assert.Equal([1, 2], items.Select(PostIdOf));
     }
 
     [Fact]
-    public async Task Exports_sharing_a_timestamp_fall_back_to_name_order()
+    public async Task Modification_time_does_not_affect_the_order()
     {
-        // Copying or unzipping a batch of files often gives them the same mtime to the second.
-        var sameMoment = new DateTime(2026, 3, 3, 12, 0, 0, DateTimeKind.Utc);
-
-        WriteExport("b-second.json", sameMoment, 2);
-        WriteExport("a-first.json", sameMoment, 1);
+        // Timestamps point the opposite way on purpose. Uploaded files are all written at once,
+        // so mtime carries no information and must not be allowed to decide anything.
+        WriteExport("aaa.json", new DateTime(2026, 6, 1, 0, 0, 0, DateTimeKind.Utc), 1);
+        WriteExport("bbb.json", new DateTime(2026, 1, 1, 0, 0, 0, DateTimeKind.Utc), 2);
 
         List<SourceContentItem> items = await ReadAllAsync();
 

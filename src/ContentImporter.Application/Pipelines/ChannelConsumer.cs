@@ -1,5 +1,6 @@
 ﻿using ContentImporter.Application.ContentProviders;
 using ContentImporter.Application.ContentProviders.ContentSource;
+using ContentImporter.Application.Notifications;
 using ContentImporter.Application.Repositories;
 using ContentImporter.Domain.Entities;
 using System.Collections.Concurrent;
@@ -18,6 +19,7 @@ namespace ContentImporter.Application.Pipelines
             ConcurrentBag<ImportError> errors,
             ConcurrentBag<ContentItem> persistedContentItems,
             IContentRepository repository,
+            IUpstreamNotifier notifier,
             CancellationToken cancellationToken)
         {
             await foreach (var item in reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
@@ -53,6 +55,12 @@ namespace ContentImporter.Application.Pipelines
                     persistedContentItems.Add(contentItem);
 
                     Interlocked.Increment(ref counters.Imported);
+
+                    // #5 tell upstream. After the upsert, never before - an upstream system that
+                    // acts on this event must be able to read what it was told about.
+                    await notifier
+                        .NotifyAsync(ContentImported.From(contentItem, eventId), cancellationToken)
+                        .ConfigureAwait(false);
                 }
                 catch (OperationCanceledException)
                 {
