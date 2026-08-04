@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The centre of the dependency graph. This project references nothing, by design:
+    see docs/adr/0001-four-projects-three-tiers.md.
+  -->
+
+</Project>

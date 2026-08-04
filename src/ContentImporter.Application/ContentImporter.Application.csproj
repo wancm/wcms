@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Depends on Domain and on nothing else. The absence of a reference to Infrastructure is the
+    whole point of the layering, and ArchitectureTests asserts it.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\ContentImporter.Domain\ContentImporter.Domain.csproj" />
+  </ItemGroup>
+
+</Project>

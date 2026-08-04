@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
+  <!--
+    The composition root: the only project allowed to name concrete types from Infrastructure.
+    Domain arrives transitively; it is not referenced directly because nothing here needs to
+    construct a domain type by hand.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\ContentImporter.Application\ContentImporter.Application.csproj" />
+    <ProjectReference Include="..\ContentImporter.Infrastructure\ContentImporter.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <!--
+    Inside namespace ContentImporter.Console, the identifier "Console" binds to this namespace
+    rather than to System.Console, so Console.WriteLine stops compiling. This alias restores the
+    obvious meaning across the whole project.
+  -->
+  <ItemGroup>
+    <Using Include="System.Console" Alias="Console" />
+  </ItemGroup>
+
+</Project>
