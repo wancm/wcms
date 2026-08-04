@@ -9,8 +9,9 @@ using System.Diagnostics;
 
 namespace ContentImporter.Application.Pipelines
 {
+    // Takes only the two collaborators worth swapping. The channel is not among them: it is
+    // state belonging to a single run, so it is built inside RunAsync rather than injected.
     public class ImportPipeline(
-        ContentImporterChannel channel,
         IContentRepository repository,
         IUpstreamNotifier notifier)
     {
@@ -36,6 +37,11 @@ namespace ContentImporter.Application.Pipelines
 
                 var persistedContentItems = new ConcurrentBag<ContentItem>();
 
+                // Per run, by construction. Completing a Channel<T>'s writer is terminal, so a
+                // channel shared between runs would leave the second one reading a closed channel
+                // and importing nothing. Building it here means that lifetime cannot be got wrong.
+                var channel = new ContentImporterChannel();
+
                 var producer = ChannelProducer.ProduceAsync(eventId, source, channel.Writer, errors, cancellationToken);
 
                 // One worker per core, all draining the same channel. Items are independent, so
@@ -57,8 +63,11 @@ namespace ContentImporter.Application.Pipelines
 
                 //--- Publishing --------------------------------------------------------------------
 
-                // Publishing belongs inside the consumer loop above, and in a real pipeline it
-                // would be there. It is a separate pass here to show a second concurrency shape:
+                // A separate pass, not part of the consumer loop above: storing content and
+                // publishing it are different steps, and upstream is only told once an item is
+                // published. The cost is holding every item until the channel drains, which a
+                // fully streaming pipeline would avoid by publishing inline. It also shows a
+                // second concurrency shape:
                 // Parallel.ForEachAsync over a fixed collection, with a ConcurrentDictionary
                 // de-duplicating and an event raised from many threads at once.
                 var publisher = new ContentPublisher(ImportPipelineOptions.Default.MaxDegreeOfParallelism, notifier, logger);
@@ -83,9 +92,11 @@ namespace ContentImporter.Application.Pipelines
                     logger.LogError("Import {EventId}: {CorrelationId} - {Message}", eventId, error.CorrelationId, error.Message);
                 }
 
+                // Failed counts items, not errors. The two differ when the source itself breaks:
+                // that is one error belonging to no item, and it must not read as one failed item.
                 var result = new ImportResult(
                     counters.Imported,
-                    errors.Count,
+                    counters.Failed,
                     errors.ToArray(),
                     stopwatch.Elapsed);
 
@@ -104,14 +115,23 @@ namespace ContentImporter.Application.Pipelines
             }
             catch (Exception ex)
             {
-                logger.LogError(ex, $"EventId={eventId}: An error occurred during the import pipeline execution.");
+                // Template plus argument, not an interpolated string: the interpolated form bakes
+                // the id into the message text, so a log search cannot filter on it as a field.
+                logger.LogError(ex, "Import {EventId} failed.", eventId);
                 throw;
             }
         }
     }
 
+    // Shared by every consumer, so these are incremented with Interlocked rather than ++.
+    // Public fields rather than properties because Interlocked.Increment needs a ref to a field.
     public sealed class ImportCounters
     {
         public int Imported;
+
+        // Items read but not imported: rejected by validation, or thrown out by an error.
+        // Counted apart from the error list, which also holds run-level failures such as an
+        // unreadable export - those belong to no particular item.
+        public int Failed;
     }
 }

@@ -39,6 +39,8 @@ namespace ContentImporter.Application.Pipelines
                             $"eventId:{eventId} correlationId:{item.CorrelationId}",
                             "Failed validation."));
 
+                        Interlocked.Increment(ref counters.Failed);
+
                         continue;
                     }
 
@@ -65,7 +67,11 @@ namespace ContentImporter.Application.Pipelines
                 }
                 catch (Exception ex)
                 {
+                    // Per-item isolation: one malformed item is recorded and the worker moves on
+                    // to the next. Only cancellation, caught above, stops the run.
                     errors.Add(new ImportError($"eventId:{eventId} correlationId:{item.CorrelationId}", ex.Message));
+
+                    Interlocked.Increment(ref counters.Failed);
                 }
             }
         }

@@ -32,15 +32,10 @@ builder.Logging.AddSimpleConsole(options =>
     options.TimestampFormat = "HH:mm:ss.fff  ";
 });
 
-// Transient, because the channel is per-run state, not shared infrastructure. Channel<T> is
-// single-use: completing the writer is terminal and cannot be undone, so a second import against
-// the same instance writes to a closed channel and silently imports nothing. Transient hands each
-// import a fresh one, which is what lets this host run more than once.
-//
-// Transient only works because the channel is resolved once per import, at the point the pipeline
-// is built. Inject it into something longer-lived and that instance captures one channel for its
-// own lifetime - a captive dependency - and the bug comes straight back.
-builder.Services.AddTransient<ContentImporterChannel>();
+// The channel is deliberately not registered here. It is state belonging to one import, not a
+// service: Channel<T> is single-use, since completing the writer is terminal, so a shared instance
+// would leave the second import reading a closed channel and quietly importing nothing. The
+// pipeline builds its own per run, which puts that lifetime beyond anyone's reach to get wrong.
 
 // Singleton, because the store outlives any single import. That is the whole point: the second
 // import of the same export has to find the first one's rows already there, or the upsert has
@@ -82,7 +77,6 @@ try
     var source = new WordPressJsonContentSource();
 
     var pipeline = new ImportPipeline(
-        host.Services.GetRequiredService<ContentImporterChannel>(),
         host.Services.GetRequiredService<IContentRepository>(),
         host.Services.GetRequiredService<IUpstreamNotifier>());
 

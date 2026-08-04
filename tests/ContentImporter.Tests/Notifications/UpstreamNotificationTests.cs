@@ -58,7 +58,7 @@ public sealed class UpstreamNotificationTests : IDisposable
 
         using var repository = new SqliteContentRepository();
 
-        await new ImportPipeline(new ContentImporterChannel(), repository, notifier)
+        await new ImportPipeline(repository, notifier)
             .RunAsync(new WordPressJsonContentSource(_folder), NullLogger.Instance)
             .ConfigureAwait(false);
 

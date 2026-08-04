@@ -1,5 +1,4 @@
 ﻿using ContentImporter.Application.ContentProviders.ContentSource;
-using ContentImporter.Application.Pipelines.Models;
 using ContentImporter.Domain.Entities;
 
 namespace ContentImporter.Application.ContentProviders

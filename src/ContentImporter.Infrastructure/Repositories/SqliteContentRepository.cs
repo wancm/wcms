@@ -100,17 +100,32 @@ namespace ContentImporter.Infrastructure.Repositories
         /// <summary>How many rows are stored, for the demo to report at the end.</summary>
         public async Task<int> CountAsync(CancellationToken cancellationToken = default)
         {
-            using SqliteCommand command = _connection.CreateCommand();
-            command.CommandText = "SELECT COUNT(*) FROM content_item;";
+            // Reads take the same lock as writes. It guards the shared connection, not the
+            // database - a read running while an upsert is mid-command is the same race.
+            await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
 
-            var count = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                using SqliteCommand command = _connection.CreateCommand();
+                command.CommandText = "SELECT COUNT(*) FROM content_item;";
 
-            return Convert.ToInt32(count);
+                var count = await command.ExecuteScalarAsync(cancellationToken).ConfigureAwait(false);
+
+                return Convert.ToInt32(count);
+            }
+            finally
+            {
+                _writeLock.Release();
+            }
         }
 
         /// <summary>Reads one item back, or null when it was never stored.</summary>
         public async Task<ContentItem?> GetAsync(string id, CancellationToken cancellationToken = default)
         {
+            await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
+
+            try
+            {
             using SqliteCommand command = _connection.CreateCommand();
             command.CommandText = "SELECT * FROM content_item WHERE id = @id;";
             command.Parameters.AddWithValue("@id", id);
@@ -135,6 +150,11 @@ namespace ContentImporter.Infrastructure.Repositories
                     ? null
                     : reader.GetFieldValue<DateTimeOffset>(reader.GetOrdinal("published_at"))
             };
+            }
+            finally
+            {
+                _writeLock.Release();
+            }
         }
 
         public void Dispose()

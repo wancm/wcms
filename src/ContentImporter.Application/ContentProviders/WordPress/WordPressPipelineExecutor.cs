@@ -10,11 +10,13 @@ namespace ContentImporter.Application.ContentProviders.WordPress
 
         private WordPressDto? dto;
 
-        private WordPressDtoSerializer serializer => new();
+        // '=' not '=>'. An expression-bodied property would construct a new serializer on every
+        // read of the field, silently, once per item.
+        private readonly WordPressDtoSerializer serializer = new();
 
-        private WordPressDtoValidator validator = new WordPressDtoValidator();
+        private readonly WordPressDtoValidator validator = new WordPressDtoValidator();
 
-        private WordPressDtoEntityMapper mapper = new WordPressDtoEntityMapper();
+        private readonly WordPressDtoEntityMapper mapper = new WordPressDtoEntityMapper();
 
         public async Task DeserializeDtoAsync(SourceContentItem sourceContentItem)
         {
