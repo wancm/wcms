@@ -19,7 +19,6 @@ namespace ContentImporter.Application.Pipelines
             ConcurrentBag<ImportError> errors,
             ConcurrentBag<ContentItem> persistedContentItems,
             IContentRepository repository,
-            IUpstreamNotifier notifier,
             CancellationToken cancellationToken)
         {
             await foreach (var item in reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
@@ -56,11 +55,9 @@ namespace ContentImporter.Application.Pipelines
 
                     Interlocked.Increment(ref counters.Imported);
 
-                    // #5 tell upstream. After the upsert, never before - an upstream system that
-                    // acts on this event must be able to read what it was told about.
-                    await notifier
-                        .NotifyAsync(ContentImported.From(contentItem, eventId), cancellationToken)
-                        .ConfigureAwait(false);
+                    // Upstream is not told here. Storing content is not the same as publishing it,
+                    // and the brief says upstream hears when content is *available* - so the
+                    // notification belongs after ContentPublisher, not after the upsert.
                 }
                 catch (OperationCanceledException)
                 {

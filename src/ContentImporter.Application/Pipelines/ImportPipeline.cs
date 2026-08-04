@@ -48,7 +48,7 @@ namespace ContentImporter.Application.Pipelines
                 {
                     var consumer = new ChannelConsumer();
 
-                    consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, repository, notifier, cancellationToken);
+                    consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, repository, cancellationToken);
                 }
 
                 // Finishes when the producer has read the whole source and every consumer has
@@ -61,7 +61,7 @@ namespace ContentImporter.Application.Pipelines
                 // would be there. It is a separate pass here to show a second concurrency shape:
                 // Parallel.ForEachAsync over a fixed collection, with a ConcurrentDictionary
                 // de-duplicating and an event raised from many threads at once.
-                var publisher = new ContentPublisher(ImportPipelineOptions.Default.MaxDegreeOfParallelism);
+                var publisher = new ContentPublisher(ImportPipelineOptions.Default.MaxDegreeOfParallelism, notifier, logger);
 
                 // ConcurrentQueue because this handler runs on every worker thread at once.
                 var auditLog = new ConcurrentQueue<string>();
@@ -69,7 +69,7 @@ namespace ContentImporter.Application.Pipelines
                 publisher.ContentPublished += (_, eventArgs) =>
                     auditLog.Enqueue($"{eventArgs.Content.Id} published on thread {Environment.CurrentManagedThreadId}");
 
-                await publisher.PublishAsync(persistedContentItems, cancellationToken).ConfigureAwait(false);
+                await publisher.PublishAsync(eventId, persistedContentItems, cancellationToken).ConfigureAwait(false);
 
                 stopwatch.Stop();
 

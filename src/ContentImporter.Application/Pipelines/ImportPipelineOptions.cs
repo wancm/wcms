@@ -16,6 +16,6 @@
         /// This is the pipeline's memory ceiling: at most this many items are
         /// buffered, regardless of how large the source export is (backpressure).
         /// </summary>
-        public int ChannelCapacity { get; init; } = 256;
+        public int ChannelCapacity { get; init; } = 256; // default to 256 items for demo purposes, can be tuned for performance
     }
 }

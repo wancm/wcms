@@ -95,9 +95,9 @@ namespace ContentImporter.Infrastructure.Notifications
             Encoder = System.Text.Encodings.Web.JavaScriptEncoder.UnsafeRelaxedJsonEscaping
         };
 
-        // Elapsed time is what shows the work overlapping. Thread ids alone do not: the pool
-        // reuses one thread when items are quick, which makes parallel work look sequential.
-        private readonly Stopwatch _elapsed = Stopwatch.StartNew();
+        // Wall clock, not elapsed-since-construction, so these lines interleave meaningfully with
+        // the operator log. Two output streams sharing one clock is what lets a reader pair a
+        // PUBLISHING line with the CONTENT IMPORTED that answers it.
 
         /// <summary>
         /// Writes the event to the console. Returns a completed task: printing is synchronous, and
@@ -122,9 +122,7 @@ namespace ContentImporter.Infrastructure.Notifications
         {
             var text = new StringBuilder();
 
-            text.Append("  [").Append($"{_elapsed.ElapsedMilliseconds,6}").Append("ms] ")
-                .Append("[thread ").Append($"{Environment.CurrentManagedThreadId,3}").Append("]  ")
-                .Append(heading);
+            text.Append(DateTime.Now.ToString("HH:mm:ss.fff")).Append("  ").Append(heading);
 
             if (subject.Length > 0)
             {

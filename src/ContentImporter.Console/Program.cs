@@ -22,6 +22,16 @@ using Microsoft.Extensions.Logging;
 
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
+// One line per entry, timestamped on the same clock the notifier uses, so the operator log and
+// the upstream messages can be read as one interleaved stream. The default two-line format puts
+// the category on its own line, which is unreadable next to anything else printing concurrently.
+builder.Logging.ClearProviders();
+builder.Logging.AddSimpleConsole(options =>
+{
+    options.SingleLine = true;
+    options.TimestampFormat = "HH:mm:ss.fff  ";
+});
+
 // Transient, because the channel is per-run state, not shared infrastructure. Channel<T> is
 // single-use: completing the writer is terminal and cannot be undone, so a second import against
 // the same instance writes to a closed channel and silently imports nothing. Transient hands each
