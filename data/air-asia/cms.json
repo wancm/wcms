@@ -17,6 +17,7 @@
         "pageType": "flight-search-landing-page",
         "metaDescription": "Search and book affordable flights to destinations across Asia and beyond.",
         "body": "<p>Discover exciting destinations and plan your next journey with AirAsia.</p>",
+        "publishedAt": "2025-01-15T00:00:00Z",
         "heroImage": {
           "referenceType": "asset",
           "targetId": "asset-2001"
@@ -80,6 +81,7 @@
         "pageType": "travel-information-page",
         "metaDescription": "Learn about cabin baggage, checked baggage and baggage restrictions before you fly.",
         "body": "<p>Prepare for your journey by reviewing the baggage options and requirements that apply to your booking.</p>",
+        "publishedAt": "2025-02-03T00:00:00Z",
         "heroImage": {
           "referenceType": "asset",
           "targetId": "asset-2002"
@@ -149,6 +151,7 @@
         "pageType": "travel-information-page",
         "metaDescription": "Find out how to check in online, obtain your boarding pass and prepare for departure.",
         "body": "<p>Complete your flight check-in before arriving at the airport for a smoother travel experience.</p>",
+        "publishedAt": "2025-02-20T00:00:00Z",
         "heroImage": {
           "referenceType": "asset",
           "targetId": "asset-2003"
@@ -209,6 +212,7 @@
         "pageType": "product-landing-page",
         "metaDescription": "Explore travel insurance options for selected travel disruptions, medical situations and baggage-related events.",
         "body": "<p>Add travel protection to your journey for additional peace of mind.</p>",
+        "publishedAt": "2025-06-11T00:00:00Z",
         "heroImage": {
           "referenceType": "asset",
           "targetId": "asset-2004"
@@ -261,6 +265,7 @@
         "pageType": "destination-page",
         "metaDescription": "Discover Bangkok and start planning your next city adventure.",
         "body": "<p>Experience Bangkok's food, shopping, cultural landmarks and lively neighbourhoods.</p>",
+        "publishedAt": "2025-09-02T00:00:00Z",
         "heroImage": {
           "referenceType": "asset",
           "targetId": "asset-2005"
@@ -314,6 +319,7 @@
         "pageType": "destination-page",
         "metaDescription": "Plan a journey to Bali and explore its beaches, culture and natural scenery.",
         "body": "<p>Discover beaches, traditional culture, local cuisine and scenic landscapes in Bali.</p>",
+        "publishedAt": "2025-09-02T00:00:00Z",
         "heroImage": {
           "referenceType": "asset",
           "targetId": "asset-2006"
@@ -365,6 +371,7 @@
         "category": "baggage",
         "summary": "Important information to review before packing your cabin baggage.",
         "body": "<p>Cabin baggage must comply with the requirements applicable to your flight.</p><h2>Before travelling</h2><ul><li>Review the latest size and weight limits.</li><li>Keep important documents and valuables with you.</li><li>Check whether any items are restricted.</li></ul>",
+        "publishedAt": "2025-03-10T00:00:00Z",
         "featuredImage": {
           "referenceType": "asset",
           "targetId": "asset-2007"
@@ -382,6 +389,7 @@
         "category": "baggage",
         "summary": "How to add, prepare and check in baggage for your journey.",
         "body": "<p>Checked baggage options may vary according to the route, fare and selected add-ons.</p><h2>Preparing your baggage</h2><ul><li>Use a secure and identifiable bag.</li><li>Do not place restricted items inside checked baggage.</li><li>Keep travel documents, medication and valuables in your cabin baggage.</li></ul>",
+        "publishedAt": "2025-03-10T00:00:00Z",
         "featuredImage": {
           "referenceType": "asset",
           "targetId": "asset-2008"
@@ -399,6 +407,7 @@
         "category": "baggage",
         "summary": "Understand which items cannot be carried or require special handling.",
         "body": "<p>Some items are prohibited or restricted for safety and regulatory reasons.</p><p>Passengers should review the latest requirements before packing and contact customer support when clarification is required.</p>",
+        "publishedAt": "2025-04-01T00:00:00Z",
         "lastReviewedAt": "2026-07-20T02:30:00Z"
       }
     },
@@ -412,6 +421,7 @@
         "category": "check-in",
         "summary": "A step-by-step guide to checking in before your flight.",
         "body": "<p>Online check-in allows eligible guests to confirm their journey details and obtain a boarding pass before arriving at the airport.</p><p>Availability and document-verification requirements may differ by route and passenger type.</p>",
+        "publishedAt": "2025-05-05T00:00:00Z",
         "lastReviewedAt": "2026-07-22T06:00:00Z"
       }
     },
@@ -425,6 +435,7 @@
         "category": "travel-insurance",
         "summary": "Points to consider when reviewing travel insurance options.",
         "body": "<p>Travel insurance plans may provide different benefits depending on the journey, departure country and policy selected.</p><h2>Before purchasing</h2><ul><li>Review the policy benefits.</li><li>Understand the exclusions.</li><li>Check the required supporting documents for claims.</li></ul>",
+        "publishedAt": "2025-06-20T00:00:00Z",
         "lastReviewedAt": "2026-07-25T04:00:00Z"
       }
     },
@@ -438,6 +449,7 @@
         "category": "destination-guide",
         "summary": "General planning ideas for a first visit to Bangkok.",
         "body": "<p>Plan your transport, accommodation and activities before departure.</p><p>Allow time to explore different areas of the city and review the latest entry requirements before travelling.</p>",
+        "publishedAt": "2025-09-10T00:00:00Z",
         "featuredImage": {
           "referenceType": "asset",
           "targetId": "asset-2005"
@@ -454,6 +466,7 @@
         "category": "destination-guide",
         "summary": "General planning ideas for a first journey to Bali.",
         "body": "<p>Consider the areas you would like to visit, expected travel time between locations and the activities you plan to enjoy.</p><p>Review the latest entry and local travel requirements before departure.</p>",
+        "publishedAt": "2025-09-10T00:00:00Z",
         "featuredImage": {
           "referenceType": "asset",
           "targetId": "asset-2006"
