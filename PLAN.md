@@ -235,6 +235,34 @@ Each step: **I design it → you write the skeleton → I review → repeat → 
 - **No `global.json`** — only SDK 10.0.300 is installed here; the .NET 8.0.29 runtime is present, so
   `net8.0` targeting and test execution work. CI pins 8.0.x explicitly.
 
+## Test data
+
+Exports live in `data/air-asia/`. Both share one shape — an object with `exportMetadata`,
+`items` and `assets` — so one reader handles both. `exportMetadata.sourceSystem` is where
+`ProviderCode` comes from, and `exportMetadata.defaultLanguage` is the fallback when an item
+omits its language.
+
+| Fixture | Items | What it is for |
+|---|---|---|
+| `cms.json` | 14 | Realistic happy path. Every item valid except `component-5001`. |
+| `cms-with-defects.json` | 14 | One seeded defect per item, each annotated with `_expected` and `_why`. Proves per-item error isolation. |
+
+**`items` is a nested array, which rules out `JsonSerializer.DeserializeAsyncEnumerable`** — that
+only streams a root-level array, and .NET 8 has no overload for a nested one. `JsonContentSource`
+therefore walks to the `items` property with a `Utf8JsonReader` and deserializes element by
+element. Flattening the Export to a root array would buy the one-liner at the cost of
+`exportMetadata`, and `JsonDocument.Parse` is not an option at all — it loads the whole Export
+into memory, which is the one thing this design exists to avoid.
+
+**A component with no title is a real failure, not a special case.** `component-5001` is a
+`promotionBanner` carrying `internalName` and `heading` instead of a title. We let
+`ContentItem.Create` refuse it rather than falling back to `internalName`, because an editor's
+internal label is not a title a visitor should ever see. The upside is that the realistic fixture
+produces a genuine partial failure without anything contrived.
+
+Still needed: a generated large Export for backpressure and parallelism (step 11), a truncated
+file for testing `IContentSource` itself, and a second provider's Export in XML (step 10).
+
 ## Open questions
 
 1. **When is an Export acknowledged?** Moving the file / committing the offset after a run that

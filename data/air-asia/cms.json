@@ -1,0 +1,576 @@
+{
+  "exportMetadata": {
+    "sourceSystem": "AirlineLegacyWcms",
+    "sourceVersion": "7.2",
+    "exportFormatVersion": "1.0",
+    "exportedAt": "2026-08-03T08:00:00Z",
+    "defaultLanguage": "en-MY"
+  },
+  "items": [
+    {
+      "id": "page-1001",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Book Flights",
+        "slug": "flights",
+        "pageType": "flight-search-landing-page",
+        "metaDescription": "Search and book affordable flights to destinations across Asia and beyond.",
+        "body": "<p>Discover exciting destinations and plan your next journey with AirAsia.</p>",
+        "heroImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2001"
+        },
+        "primaryCallToAction": {
+          "text": "Search Flights",
+          "url": "/flight/search"
+        },
+        "sections": [
+          {
+            "type": "flightSearch",
+            "heading": "Where would you like to go?",
+            "settings": {
+              "allowOneWay": true,
+              "allowRoundTrip": true,
+              "allowMultiCity": false,
+              "defaultPassengerCount": 1
+            }
+          },
+          {
+            "type": "featuredDestinations",
+            "heading": "Popular destinations",
+            "items": [
+              {
+                "referenceType": "content",
+                "targetId": "page-1005"
+              },
+              {
+                "referenceType": "content",
+                "targetId": "page-1006"
+              }
+            ]
+          },
+          {
+            "type": "promotionBanner",
+            "contentReference": {
+              "referenceType": "content",
+              "targetId": "component-5001"
+            }
+          }
+        ],
+        "relatedArticles": [
+          {
+            "referenceType": "content",
+            "targetId": "article-3001"
+          },
+          {
+            "referenceType": "content",
+            "targetId": "article-3002"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-1002",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Baggage Information",
+        "slug": "baggage",
+        "pageType": "travel-information-page",
+        "metaDescription": "Learn about cabin baggage, checked baggage and baggage restrictions before you fly.",
+        "body": "<p>Prepare for your journey by reviewing the baggage options and requirements that apply to your booking.</p>",
+        "heroImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2002"
+        },
+        "sections": [
+          {
+            "type": "richText",
+            "heading": "Cabin baggage",
+            "body": "<p>Guests may bring cabin baggage subject to the size, weight and safety requirements applicable to their flight.</p><p>Please check the latest baggage rules before travelling.</p>"
+          },
+          {
+            "type": "richText",
+            "heading": "Checked baggage",
+            "body": "<p>Checked baggage can be added when booking a flight or managed later through the booking management service.</p>"
+          },
+          {
+            "type": "linkList",
+            "heading": "Baggage topics",
+            "links": [
+              {
+                "text": "Cabin baggage rules",
+                "contentReference": {
+                  "referenceType": "content",
+                  "targetId": "article-3001"
+                }
+              },
+              {
+                "text": "Checked baggage guide",
+                "contentReference": {
+                  "referenceType": "content",
+                  "targetId": "article-3002"
+                }
+              },
+              {
+                "text": "Prohibited and restricted items",
+                "contentReference": {
+                  "referenceType": "content",
+                  "targetId": "article-3003"
+                }
+              }
+            ]
+          }
+        ],
+        "relatedArticles": [
+          {
+            "referenceType": "content",
+            "targetId": "article-3001"
+          },
+          {
+            "referenceType": "content",
+            "targetId": "article-3002"
+          },
+          {
+            "referenceType": "content",
+            "targetId": "article-3003"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-1003",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Check In for Your Flight",
+        "slug": "check-in",
+        "pageType": "travel-information-page",
+        "metaDescription": "Find out how to check in online, obtain your boarding pass and prepare for departure.",
+        "body": "<p>Complete your flight check-in before arriving at the airport for a smoother travel experience.</p>",
+        "heroImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2003"
+        },
+        "primaryCallToAction": {
+          "text": "Check In Now",
+          "url": "/check-in"
+        },
+        "sections": [
+          {
+            "type": "steps",
+            "heading": "How to check in",
+            "steps": [
+              {
+                "stepNumber": 1,
+                "title": "Retrieve your booking",
+                "description": "Enter your booking number and passenger details."
+              },
+              {
+                "stepNumber": 2,
+                "title": "Confirm passenger information",
+                "description": "Review the passenger and travel document information."
+              },
+              {
+                "stepNumber": 3,
+                "title": "Complete required acknowledgements",
+                "description": "Review and accept the relevant travel and dangerous-goods notices."
+              },
+              {
+                "stepNumber": 4,
+                "title": "Get your boarding pass",
+                "description": "Save your boarding pass to your device or print it when required."
+              }
+            ]
+          },
+          {
+            "type": "notice",
+            "severity": "information",
+            "heading": "Airport requirements may differ",
+            "body": "<p>Some destinations or passenger categories may require document verification at the airport counter.</p>"
+          }
+        ],
+        "relatedArticles": [
+          {
+            "referenceType": "content",
+            "targetId": "article-3004"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-1004",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Travel Insurance",
+        "slug": "travel-insurance",
+        "pageType": "product-landing-page",
+        "metaDescription": "Explore travel insurance options for selected travel disruptions, medical situations and baggage-related events.",
+        "body": "<p>Add travel protection to your journey for additional peace of mind.</p>",
+        "heroImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2004"
+        },
+        "primaryCallToAction": {
+          "text": "View Insurance Options",
+          "url": "/travel-insurance/plans"
+        },
+        "sections": [
+          {
+            "type": "featureCards",
+            "heading": "Travel protection options",
+            "cards": [
+              {
+                "title": "Travel delays",
+                "description": "Protection may be available for eligible travel delays, subject to the selected policy."
+              },
+              {
+                "title": "Baggage incidents",
+                "description": "Protection may be available for eligible baggage delays or lost baggage."
+              },
+              {
+                "title": "Medical emergencies",
+                "description": "Selected plans may provide benefits for eligible medical emergencies during a journey."
+              }
+            ]
+          },
+          {
+            "type": "disclaimer",
+            "body": "<p>Insurance benefits, exclusions and eligibility vary by market and policy. Please review the applicable policy wording before purchase.</p>"
+          }
+        ],
+        "relatedArticles": [
+          {
+            "referenceType": "content",
+            "targetId": "article-3005"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-1005",
+      "contentType": "destinationPage",
+      "language": "en-MY",
+      "fields": {
+        "title": "Flights to Bangkok",
+        "slug": "bangkok",
+        "country": "Thailand",
+        "cityCode": "BKK",
+        "pageType": "destination-page",
+        "metaDescription": "Discover Bangkok and start planning your next city adventure.",
+        "body": "<p>Experience Bangkok's food, shopping, cultural landmarks and lively neighbourhoods.</p>",
+        "heroImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2005"
+        },
+        "primaryCallToAction": {
+          "text": "Search Flights to Bangkok",
+          "url": "/flight/search?destination=BKK"
+        },
+        "sections": [
+          {
+            "type": "richText",
+            "heading": "About Bangkok",
+            "body": "<p>Bangkok offers a combination of historic temples, modern shopping areas, markets and a wide variety of local cuisine.</p>"
+          },
+          {
+            "type": "travelHighlights",
+            "heading": "Things to explore",
+            "items": [
+              {
+                "title": "Local food",
+                "description": "Explore markets, street-food areas and local restaurants."
+              },
+              {
+                "title": "Culture",
+                "description": "Visit museums, historic districts and important cultural sites."
+              },
+              {
+                "title": "Shopping",
+                "description": "Discover shopping centres, local markets and independent stores."
+              }
+            ]
+          }
+        ],
+        "relatedArticles": [
+          {
+            "referenceType": "content",
+            "targetId": "article-3006"
+          }
+        ]
+      }
+    },
+    {
+      "id": "page-1006",
+      "contentType": "destinationPage",
+      "language": "en-MY",
+      "fields": {
+        "title": "Flights to Bali",
+        "slug": "bali",
+        "country": "Indonesia",
+        "cityCode": "DPS",
+        "pageType": "destination-page",
+        "metaDescription": "Plan a journey to Bali and explore its beaches, culture and natural scenery.",
+        "body": "<p>Discover beaches, traditional culture, local cuisine and scenic landscapes in Bali.</p>",
+        "heroImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2006"
+        },
+        "primaryCallToAction": {
+          "text": "Search Flights to Bali",
+          "url": "/flight/search?destination=DPS"
+        },
+        "sections": [
+          {
+            "type": "richText",
+            "heading": "About Bali",
+            "body": "<p>Bali is known for its beaches, cultural traditions, temples, countryside and hospitality.</p>"
+          },
+          {
+            "type": "travelHighlights",
+            "heading": "Things to explore",
+            "items": [
+              {
+                "title": "Beaches",
+                "description": "Relax near the coast or enjoy a range of water activities."
+              },
+              {
+                "title": "Nature",
+                "description": "Explore countryside, rice terraces and scenic landscapes."
+              },
+              {
+                "title": "Culture",
+                "description": "Learn about local traditions, crafts and historic sites."
+              }
+            ]
+          }
+        ],
+        "relatedArticles": [
+          {
+            "referenceType": "content",
+            "targetId": "article-3007"
+          }
+        ]
+      }
+    },
+    {
+      "id": "article-3001",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Cabin Baggage Guide",
+        "slug": "cabin-baggage-guide",
+        "category": "baggage",
+        "summary": "Important information to review before packing your cabin baggage.",
+        "body": "<p>Cabin baggage must comply with the requirements applicable to your flight.</p><h2>Before travelling</h2><ul><li>Review the latest size and weight limits.</li><li>Keep important documents and valuables with you.</li><li>Check whether any items are restricted.</li></ul>",
+        "featuredImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2007"
+        },
+        "lastReviewedAt": "2026-07-15T03:00:00Z"
+      }
+    },
+    {
+      "id": "article-3002",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Checked Baggage Guide",
+        "slug": "checked-baggage-guide",
+        "category": "baggage",
+        "summary": "How to add, prepare and check in baggage for your journey.",
+        "body": "<p>Checked baggage options may vary according to the route, fare and selected add-ons.</p><h2>Preparing your baggage</h2><ul><li>Use a secure and identifiable bag.</li><li>Do not place restricted items inside checked baggage.</li><li>Keep travel documents, medication and valuables in your cabin baggage.</li></ul>",
+        "featuredImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2008"
+        },
+        "lastReviewedAt": "2026-07-15T03:10:00Z"
+      }
+    },
+    {
+      "id": "article-3003",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Prohibited and Restricted Items",
+        "slug": "prohibited-restricted-items",
+        "category": "baggage",
+        "summary": "Understand which items cannot be carried or require special handling.",
+        "body": "<p>Some items are prohibited or restricted for safety and regulatory reasons.</p><p>Passengers should review the latest requirements before packing and contact customer support when clarification is required.</p>",
+        "lastReviewedAt": "2026-07-20T02:30:00Z"
+      }
+    },
+    {
+      "id": "article-3004",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Online Check-In Guide",
+        "slug": "online-check-in-guide",
+        "category": "check-in",
+        "summary": "A step-by-step guide to checking in before your flight.",
+        "body": "<p>Online check-in allows eligible guests to confirm their journey details and obtain a boarding pass before arriving at the airport.</p><p>Availability and document-verification requirements may differ by route and passenger type.</p>",
+        "lastReviewedAt": "2026-07-22T06:00:00Z"
+      }
+    },
+    {
+      "id": "article-3005",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Understanding Travel Insurance Options",
+        "slug": "understanding-travel-insurance",
+        "category": "travel-insurance",
+        "summary": "Points to consider when reviewing travel insurance options.",
+        "body": "<p>Travel insurance plans may provide different benefits depending on the journey, departure country and policy selected.</p><h2>Before purchasing</h2><ul><li>Review the policy benefits.</li><li>Understand the exclusions.</li><li>Check the required supporting documents for claims.</li></ul>",
+        "lastReviewedAt": "2026-07-25T04:00:00Z"
+      }
+    },
+    {
+      "id": "article-3006",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "A First-Time Visitor's Guide to Bangkok",
+        "slug": "first-time-guide-bangkok",
+        "category": "destination-guide",
+        "summary": "General planning ideas for a first visit to Bangkok.",
+        "body": "<p>Plan your transport, accommodation and activities before departure.</p><p>Allow time to explore different areas of the city and review the latest entry requirements before travelling.</p>",
+        "featuredImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2005"
+        }
+      }
+    },
+    {
+      "id": "article-3007",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Planning Your First Trip to Bali",
+        "slug": "planning-first-trip-bali",
+        "category": "destination-guide",
+        "summary": "General planning ideas for a first journey to Bali.",
+        "body": "<p>Consider the areas you would like to visit, expected travel time between locations and the activities you plan to enjoy.</p><p>Review the latest entry and local travel requirements before departure.</p>",
+        "featuredImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2006"
+        }
+      }
+    },
+    {
+      "id": "component-5001",
+      "contentType": "promotionBanner",
+      "language": "en-MY",
+      "fields": {
+        "internalName": "Homepage Flight Promotion",
+        "heading": "Ready for your next adventure?",
+        "description": "Explore available destinations and find a flight that suits your travel plans.",
+        "backgroundImage": {
+          "referenceType": "asset",
+          "targetId": "asset-2009"
+        },
+        "callToAction": {
+          "text": "Explore Flights",
+          "url": "/flights"
+        },
+        "startAt": "2026-08-01T00:00:00Z",
+        "endAt": "2026-12-31T23:59:59Z"
+      }
+    }
+  ],
+  "assets": [
+    {
+      "id": "asset-2001",
+      "fileName": "flight-booking-hero.jpg",
+      "relativeFilePath": "assets/flight-booking-hero.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Flight booking hero",
+        "altText": "Airplane flying above clouds"
+      }
+    },
+    {
+      "id": "asset-2002",
+      "fileName": "baggage-information-hero.jpg",
+      "relativeFilePath": "assets/baggage-information-hero.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Baggage information hero",
+        "altText": "Travel luggage prepared for a flight"
+      }
+    },
+    {
+      "id": "asset-2003",
+      "fileName": "online-check-in-hero.jpg",
+      "relativeFilePath": "assets/online-check-in-hero.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Online check-in hero",
+        "altText": "Passenger checking in using a mobile phone"
+      }
+    },
+    {
+      "id": "asset-2004",
+      "fileName": "travel-insurance-hero.jpg",
+      "relativeFilePath": "assets/travel-insurance-hero.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Travel insurance hero",
+        "altText": "Traveller preparing documents for a journey"
+      }
+    },
+    {
+      "id": "asset-2005",
+      "fileName": "bangkok-destination.jpg",
+      "relativeFilePath": "assets/bangkok-destination.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Bangkok destination",
+        "altText": "Bangkok city skyline"
+      }
+    },
+    {
+      "id": "asset-2006",
+      "fileName": "bali-destination.jpg",
+      "relativeFilePath": "assets/bali-destination.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Bali destination",
+        "altText": "Scenic landscape in Bali"
+      }
+    },
+    {
+      "id": "asset-2007",
+      "fileName": "cabin-baggage-guide.jpg",
+      "relativeFilePath": "assets/cabin-baggage-guide.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Cabin baggage guide",
+        "altText": "Cabin-sized travel bag"
+      }
+    },
+    {
+      "id": "asset-2008",
+      "fileName": "checked-baggage-guide.jpg",
+      "relativeFilePath": "assets/checked-baggage-guide.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Checked baggage guide",
+        "altText": "Suitcases at an airport"
+      }
+    },
+    {
+      "id": "asset-2009",
+      "fileName": "homepage-promotion-banner.jpg",
+      "relativeFilePath": "assets/homepage-promotion-banner.jpg",
+      "mimeType": "image/jpeg",
+      "metadata": {
+        "title": "Homepage promotion banner",
+        "altText": "Traveller looking towards an aircraft"
+      }
+    }
+  ]
+}

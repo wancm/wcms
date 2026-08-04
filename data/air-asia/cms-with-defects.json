@@ -1,0 +1,206 @@
+{
+  "exportMetadata": {
+    "sourceSystem": "AirlineLegacyWcms",
+    "sourceVersion": "7.2",
+    "exportFormatVersion": "1.0",
+    "exportedAt": "2026-08-04T08:00:00Z",
+    "defaultLanguage": "en-MY",
+    "_note": "Deliberately defective companion to cms.json. Every item is well-formed JSON; the defects are in the DATA, so this exercises per-item error isolation rather than a source-level parse failure. A truncated file is a separate fixture for testing IContentSource itself."
+  },
+  "items": [
+    {
+      "_expected": "imported",
+      "id": "page-2001",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Manage My Booking",
+        "slug": "manage-booking",
+        "body": "<p>Change your flight, add baggage or update passenger details after booking.</p>",
+        "publishedAt": "2026-06-01T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "imported",
+      "id": "page-2002",
+      "contentType": "destinationPage",
+      "language": "en-MY",
+      "fields": {
+        "title": "Flights to Tokyo",
+        "slug": "tokyo",
+        "country": "Japan",
+        "cityCode": "NRT",
+        "body": "<p>Explore Tokyo's neighbourhoods, cuisine and seasonal attractions.</p>",
+        "publishedAt": "2026-06-10T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "imported",
+      "id": "article-4001",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Travelling With Infants",
+        "slug": "travelling-with-infants",
+        "category": "family-travel",
+        "body": "<p>Requirements and preparation for guests travelling with an infant.</p>",
+        "publishedAt": "2026-06-15T00:00:00Z"
+      }
+    },
+
+    {
+      "_expected": "failed: language_tag.malformed",
+      "_why": "WordPress-style underscore separator. Normalising this is the mapper's job, so one reaching the domain means the mapper is missing a step.",
+      "id": "page-2003",
+      "contentType": "page",
+      "language": "en_MY",
+      "fields": {
+        "title": "Seat Selection",
+        "slug": "seat-selection",
+        "body": "<p>Choose where you sit before you fly.</p>",
+        "publishedAt": "2026-06-02T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "failed: language_tag.malformed",
+      "_why": "A Windows LCID rather than an IETF tag. 1033 means en-US to a legacy CMS and nothing at all to us.",
+      "id": "page-2004",
+      "contentType": "page",
+      "language": "1033",
+      "fields": {
+        "title": "In-Flight Meals",
+        "slug": "meals",
+        "body": "<p>Pre-order a meal for your journey.</p>",
+        "publishedAt": "2026-06-03T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "failed: language_tag.required",
+      "_why": "Language is present but empty. Distinct from omitting it entirely -- an empty value is a statement, so there is nothing to fall back to.",
+      "id": "page-2005",
+      "contentType": "page",
+      "language": "",
+      "fields": {
+        "title": "Airport Transfers",
+        "slug": "airport-transfers",
+        "body": "<p>Arrange ground transport at your destination.</p>",
+        "publishedAt": "2026-06-04T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "imported",
+      "_why": "Language is OMITTED, which is what exportMetadata.defaultLanguage exists for. This is the one item here that tests a mapper fallback rather than a rejection -- if it fails, the mapper is not reading the export metadata.",
+      "id": "page-2006",
+      "contentType": "page",
+      "fields": {
+        "title": "Special Assistance",
+        "slug": "special-assistance",
+        "body": "<p>Request wheelchair assistance or support for reduced mobility.</p>",
+        "publishedAt": "2026-06-05T00:00:00Z"
+      }
+    },
+
+    {
+      "_expected": "failed: external_reference.external_id_required",
+      "_why": "No identity in the Source Provider, so there is nothing to upsert on and a re-import could not be idempotent.",
+      "id": "",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Flight Status",
+        "slug": "flight-status",
+        "body": "<p>Check whether your flight is on time.</p>",
+        "publishedAt": "2026-06-06T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "failed: content_type.required",
+      "_why": "Content that does not say what kind of thing it is.",
+      "id": "page-2008",
+      "contentType": "",
+      "language": "en-MY",
+      "fields": {
+        "title": "Group Bookings",
+        "slug": "group-bookings",
+        "body": "<p>Book for ten or more guests travelling together.</p>",
+        "publishedAt": "2026-06-07T00:00:00Z"
+      }
+    },
+
+    {
+      "_expected": "failed: content_item.title_required",
+      "_why": "The title field is absent entirely.",
+      "id": "article-4002",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "slug": "refund-policy",
+        "category": "bookings",
+        "body": "<p>How refunds are assessed and processed.</p>",
+        "publishedAt": "2026-06-16T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "failed: content_item.title_required",
+      "_why": "Whitespace is not a title. Catches a validator that checks for null but not for blank.",
+      "id": "article-4003",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "     ",
+        "slug": "name-changes",
+        "category": "bookings",
+        "body": "<p>Correcting a passenger name after booking.</p>",
+        "publishedAt": "2026-06-17T00:00:00Z"
+      }
+    },
+    {
+      "_expected": "failed: content_item.title_too_long",
+      "_why": "647 characters against a 512 limit. Refused rather than truncated -- silently shortening a customer's title during a migration loses data they cannot recover.",
+      "id": "article-4004",
+      "contentType": "article",
+      "language": "en-MY",
+      "fields": {
+        "title": "Everything you need to know about baggage allowances, cabin baggage dimensions, checked baggage weight limits, sports equipment handling, musical instrument carriage, fragile item packing guidance, prohibited and restricted articles, dangerous goods declarations, excess baggage charges, baggage delivery timescales, lost and delayed baggage claim procedures, damaged baggage assessment, baggage insurance considerations, airport-specific baggage drop arrangements, self-service bag tag printing, connecting flight baggage transfer rules, and the escalation path to customer support when something goes wrong with your baggage on any AirAsia route",
+        "slug": "complete-baggage-guide",
+        "category": "baggage",
+        "body": "<p>A comprehensive guide.</p>",
+        "publishedAt": "2026-06-18T00:00:00Z"
+      }
+    },
+
+    {
+      "_expected": "failed: content_item.title_required",
+      "_why": "A promotionBanner is a component, not a titled piece of content -- it carries internalName and heading instead. Mirrors component-5001 in cms.json. We deliberately let this fail rather than inventing a title from internalName, because an editor's internal label is not something a visitor should ever see.",
+      "id": "component-6001",
+      "contentType": "promotionBanner",
+      "language": "en-MY",
+      "fields": {
+        "internalName": "Tokyo Route Launch Promotion",
+        "heading": "Now flying to Tokyo",
+        "description": "Book early for the best fares on our newest route.",
+        "callToAction": {
+          "text": "Explore Tokyo",
+          "url": "/destinations/tokyo"
+        },
+        "startAt": "2026-08-01T00:00:00Z",
+        "endAt": "2026-10-31T23:59:59Z"
+      }
+    },
+
+    {
+      "_expected": "imported, but see _why",
+      "_why": "page-2001 appears TWICE in one Export with a different title. Upsert by ExternalReference means one row survives -- but with N parallel workers, WHICH one survives is a race. Storage stays consistent; the winner is not deterministic. A real importer would need a tie-break (export order, a version field) or would reject intra-Export duplicates outright. Left here on purpose so the hazard is visible.",
+      "id": "page-2001",
+      "contentType": "page",
+      "language": "en-MY",
+      "fields": {
+        "title": "Manage My Booking (updated)",
+        "slug": "manage-booking",
+        "body": "<p>Change your flight, add baggage or update passenger details after booking.</p>",
+        "publishedAt": "2026-06-20T00:00:00Z"
+      }
+    }
+  ],
+  "assets": []
+}
