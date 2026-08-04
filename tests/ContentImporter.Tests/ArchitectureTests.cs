@@ -15,9 +15,9 @@ namespace ContentImporter.Tests;
 /// </para>
 /// <para>
 /// What MSBuild will happily allow is a layer reaching for the wrong <em>framework</em>. Nothing
-/// stops someone parsing JSON inside Domain or opening a file inside Application, and doing so
-/// would quietly move a format concern out of Infrastructure where it belongs. That is what these
-/// tests check.
+/// stops someone opening a socket or a database connection inside Application, or parsing JSON
+/// inside Domain. That is what these tests check — and the two layers are held to different
+/// standards on purpose, see below.
 /// </para>
 /// <para>
 /// The check reads compiled assemblies, and the C# compiler omits references that no type
@@ -31,32 +31,55 @@ public sealed class ArchitectureTests
     private const string Application = "ContentImporter.Application";
 
     /// <summary>
-    /// Serialization, transport and storage are Infrastructure's job. A layer that reaches for
-    /// one of these has taken on a concern that belongs behind a port.
+    /// Transport and storage are Infrastructure's job. A layer that opens a socket or a database
+    /// connection has taken on a concern that belongs behind a port.
     /// </summary>
-    private static readonly string[] InfrastructureConcerns =
+    /// <remarks>
+    /// Serialization used to be on this list, and deliberately is not any more. Provider adapters
+    /// live in Application by design (ADR 0001) — reading a customer's export is what the
+    /// application layer is *for* — and an adapter that may not name its own wire format is not an
+    /// adapter. Transport and storage are different: those are resources the process connects to,
+    /// and swapping them must not recompile Application.
+    /// </remarks>
+    private static readonly string[] TransportAndStorage =
     [
-        "System.Text.Json",
-        "System.Xml",
-        "System.Xml.ReaderWriter",
-        "System.Private.Xml",
         "System.Net.Http",
         "System.Data.Common",
     ];
 
-    [Theory]
-    [InlineData(Domain)]
-    [InlineData(Application)]
-    public void Layer_is_free_of_infrastructure_concerns(string layer)
-    {
-        string[] referenced = ReferencedAssemblyNamesOf(layer);
+    /// <summary>
+    /// Domain is held to the stricter rule. It sits at the centre and describes what content
+    /// <em>is</em>, so it has no business knowing any wire format at all.
+    /// </summary>
+    private static readonly string[] DomainConcerns =
+    [
+        .. TransportAndStorage,
+        "System.Text.Json",
+        "System.Xml",
+        "System.Xml.ReaderWriter",
+        "System.Private.Xml",
+    ];
 
-        string[] violations = [.. referenced.Intersect(InfrastructureConcerns)];
+    [Fact]
+    public void Application_is_free_of_transport_and_storage()
+    {
+        AssertFreeOf(Application, TransportAndStorage);
+    }
+
+    [Fact]
+    public void Domain_is_free_of_infrastructure_concerns()
+    {
+        AssertFreeOf(Domain, DomainConcerns);
+    }
+
+    private static void AssertFreeOf(string layer, string[] concerns)
+    {
+        string[] violations = [.. ReferencedAssemblyNamesOf(layer).Intersect(concerns)];
 
         Assert.True(
             violations.Length == 0,
-            $"{layer} references {string.Join(", ", violations)}. Serialization, transport and " +
-            "storage belong in Infrastructure, behind a port that Application declares.");
+            $"{layer} references {string.Join(", ", violations)}, which belongs in Infrastructure " +
+            "behind a port that Application declares.");
     }
 
     /// <summary>

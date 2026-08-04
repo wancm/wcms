@@ -10,6 +10,25 @@ it and answer probing follow-up questions.
 Therefore: optimize for my learning, not for your speed. Never dump the whole
 application at once.
 
+## Simplicity rule (overrides everything below when they conflict)
+
+This is a **demo**. Demonstrating the idea clearly beats implementing it fully.
+
+- Write the **simplest code that shows the concept**. Prefer the obvious API over
+  the optimal one — `File.OpenRead` + `JsonDocument` over a hand-rolled
+  `Utf8JsonReader` buffer loop, a plain `List<T>` over `ArrayPool<T>`.
+- Do not add production hardening I did not ask for: no buffer growth, no pooling,
+  no partial-chunk state machines, no extra constructor parameters "for testability",
+  no defensive branches for inputs the sample data never produces.
+- **Comments: short and few.** One line, only where a reader would otherwise wonder
+  why. No multi-paragraph `<remarks>` essays justifying a design.
+- Where the simple version knowingly breaks one of the constraints below (e.g.
+  loading a whole file into memory), say so in a **one-line comment** and move on.
+  The trade-off belongs in the README and in what I say out loud at the interview —
+  not in the code.
+- If you think the simple version is genuinely wrong, say it in one sentence, then
+  write the simple version anyway.
+
 ## The task (from the interviewer's email)
 
 > "For one of our Web Content Management Systems (WCMS) we need to provide a facility
@@ -34,9 +53,11 @@ Deliverable: a small solution that demonstrates the concepts (not a production s
 
 - .NET 8 (LTS), C# latest, nullable enabled, implicit usings.
 - Console demo app + class library + xUnit test project. No hosted service/API.
-- Source formats: streaming JSON and streaming XML adapters (to demonstrate the
-  extension point). Exports may be arbitrarily large — never load a whole export
-  into memory.
+- Source formats: JSON and XML adapters (to demonstrate the extension point).
+  "Exports may be arbitrarily large" is the *story*; the demo code may still read a
+  small sample file whole, with a one-line comment naming the shortcut. Real
+  streaming stays a talking point unless I ask for it. The **pipeline** is still a
+  genuine bounded-channel producer/consumer — that part is the point of the task.
 - Upstream notification: event-driven via an in-process publisher **abstraction**
   (interface + event records), designed so a real broker (Azure Service Bus /
   Kafka / RabbitMQ) implementation could be slotted in later. No real broker.
@@ -89,7 +110,7 @@ N parallel consumer workers            (per-item error isolation; cancellation p
 ## Coding standards
 
 - Library code uses ConfigureAwait(false); CancellationToken on every async seam.
-- XML doc comments on public types explaining the design intent, not restating names.
+- One-line XML `<summary>` on public types. No `<remarks>` unless I ask.
 - Prefer sealed classes, records, init-only properties. No locks — thread-safe
   collections and immutability only.
 - Tests: behavior-focused names (e.g. `Failures_are_recorded_but_do_not_stop_the_import`),

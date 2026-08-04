@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31903.59
+# Visual Studio Version 18
+VisualStudioVersion = 18.7.11811.120 insiders
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{827E0CD3-B72D-47B6-A68D-7590B98EB39B}"
 EndProject
@@ -16,6 +16,12 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{0AB3BF05-4346-4AA6-1389-037BE0695223}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ContentImporter.Tests", "tests\ContentImporter.Tests\ContentImporter.Tests.csproj", "{3D25E03E-CDCE-4BB3-A349-9606570C4387}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A827B690-510F-4C00-B51E-AF13A28A1646}"
+	ProjectSection(SolutionItems) = preProject
+		data\air-asia\cms-with-defects.json = data\air-asia\cms-with-defects.json
+		data\air-asia\cms.json = data\air-asia\cms.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -97,5 +103,8 @@ Global
 		{D8CFF66D-348B-4938-AAB6-EF2F0D0419F1} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{A01BD48B-4616-4833-BC09-D47A465945D9} = {827E0CD3-B72D-47B6-A68D-7590B98EB39B}
 		{3D25E03E-CDCE-4BB3-A349-9606570C4387} = {0AB3BF05-4346-4AA6-1389-037BE0695223}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4713C046-797E-40E4-9E12-710EF9F05125}
 	EndGlobalSection
 EndGlobal
