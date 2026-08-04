@@ -37,6 +37,18 @@ public sealed class WordPressDtoEntityMapperTests
     }
 
     [Fact]
+    public async Task The_id_pairs_the_provider_with_the_source_id()
+    {
+        // This is the key ContentPublisher de-duplicates on, so mapping the same item twice
+        // has to produce the same string both times. A generated id would not.
+        ContentItem first = await Mapper.MapAsync(PublishedPost);
+        ContentItem second = await Mapper.MapAsync(PublishedPost);
+
+        Assert.Equal("wordpress:201", first.Id);
+        Assert.Equal(first.Id, second.Id);
+    }
+
+    [Fact]
     public async Task Gmt_text_becomes_an_instant_at_zero_offset()
     {
         // post_date_gmt has no "T" and no offset, so the offset must be supplied, not inferred.
@@ -72,6 +84,7 @@ public sealed class WordPressDtoEntityMapperTests
             ContentEncoded = null
         });
 
+        Assert.Equal("wordpress:301", item.Id);
         Assert.Equal("301", item.ExternalId);
         Assert.Equal("attachment", item.ContentType);
         Assert.Null(item.PublishedAt);

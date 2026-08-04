@@ -13,6 +13,9 @@ namespace ContentImporter.Application.ContentProviders.WordPress
         private static readonly string ExportPath =
             Path.Combine(AppContext.BaseDirectory, "data", "wordpress", "word-press.json");
 
+        /// <summary>
+        /// Reads @[channel].[items] from the WordPress JSON export file and yields SourceContentItem instances for each item in the export.
+        /// </summary>
         public async IAsyncEnumerable<SourceContentItem> ReadAsync(
             [EnumeratorCancellation] CancellationToken cancellationToken = default)
         {

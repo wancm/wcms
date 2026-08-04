@@ -1,5 +1,6 @@
 ﻿using ContentImporter.Application.ContentProviders;
 using ContentImporter.Application.ContentProviders.ContentSource;
+using ContentImporter.Application.Repositories;
 using ContentImporter.Domain.Entities;
 using System.Collections.Concurrent;
 using System.Threading.Channels;
@@ -16,6 +17,7 @@ namespace ContentImporter.Application.Pipelines
             ImportCounters counters,
             ConcurrentBag<ImportError> errors,
             ConcurrentBag<ContentItem> persistedContentItems,
+            IContentRepository repository,
             CancellationToken cancellationToken)
         {
             await foreach (var item in reader.ReadAllAsync(cancellationToken).ConfigureAwait(false))
@@ -41,6 +43,10 @@ namespace ContentImporter.Application.Pipelines
 
                     // #3 DTO to domain entity
                     var contentItem = await executor.DtoMapEntityAsync().ConfigureAwait(false);
+
+                    // #4 persist. Upsert by Id, so re-running the same export overwrites
+                    // rather than duplicating.
+                    await repository.UpsertAsync(contentItem, cancellationToken).ConfigureAwait(false);
 
                     // ConcurrentBag: every consumer adds to this at once. Publishing happens
                     // later, once the channel is drained.

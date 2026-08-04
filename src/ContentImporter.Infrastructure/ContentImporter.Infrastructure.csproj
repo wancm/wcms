@@ -8,5 +8,8 @@
     <ProjectReference Include="..\ContentImporter.Application\ContentImporter.Application.csproj" />
     <ProjectReference Include="..\ContentImporter.Domain\ContentImporter.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+  </ItemGroup>
 
 </Project>

@@ -23,7 +23,9 @@ namespace ContentImporter.Application.ContentProviders.WordPress
             return new ContentItem
             {
                 // post_id alone is not an identity - two providers can both export item 201.
-                Id = Guid.NewGuid().ToString(),
+                // Derived, not generated: a fresh Guid per run would make every re-import look
+                // like new content to ContentPublisher's duplicate check.
+                Id = $"{ProviderCode}:{externalId}",
                 ProviderCode = ProviderCode,
                 ExternalId = externalId,
                 Title = dto.Title?.Trim() ?? string.Empty,

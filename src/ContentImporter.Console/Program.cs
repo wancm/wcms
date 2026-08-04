@@ -1,5 +1,7 @@
 using ContentImporter.Application.ContentProviders.WordPress;
 using ContentImporter.Application.Pipelines;
+using ContentImporter.Application.Repositories;
+using ContentImporter.Infrastructure.Repositories;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -16,6 +18,13 @@ using Microsoft.Extensions.Logging;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 builder.Services.AddSingleton<ContentImporterChannel>();
+
+// Singleton: the repository owns the store that makes the import idempotent, so every
+// consumer must share one instance. Transient would give each worker a private database.
+// This is also the only project allowed to name a concrete Infrastructure type - swapping
+// SqliteContentRepository for InMemoryContentRepository is this one line, and nothing in
+// Application or Domain recompiles. That is the claim ADR 0001 makes.
+builder.Services.AddSingleton<IContentRepository, SqliteContentRepository>();
 
 using IHost host = builder.Build();
 
@@ -43,7 +52,10 @@ try
 
     var source = new WordPressJsonContentSource();
 
-    var pipeline = new ImportPipeline(host.Services.GetRequiredService<ContentImporterChannel>());
+    var pipeline = new ImportPipeline(
+        host.Services.GetRequiredService<ContentImporterChannel>(),
+        host.Services.GetRequiredService<IContentRepository>());
+
     var result = await pipeline.RunAsync(source, logger, cancellation.Token).ConfigureAwait(false);
 
     logger.LogInformation("Import completed. Imported {Imported}, Failed {Failed}.", result.Imported, result.Failed);

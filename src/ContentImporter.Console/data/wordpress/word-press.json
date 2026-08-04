@@ -1,44 +1,5 @@
 {
-  "channel": {
-    "title": "Dummy WordPress Site",
-    "link": "https://dummy.example.com",
-    "description": "Just another WordPress site",
-    "pub_date": "Tue, 04 Aug 2026 00:00:00 +0000",
-    "language": "en-US",
-    "wxr_version": "1.2",
-    "generator": "https://wordpress.org/?v=6.5.2",
-    "base_site_url": "https://dummy.example.com",
-    "base_blog_url": "https://dummy.example.com",
-    "authors": [
-      {
-        "author_id": 1,
-        "author_login": "dummyadmin",
-        "author_email": "admin@dummy.example.com",
-        "author_display_name": "Dummy Admin",
-        "author_first_name": "Dummy",
-        "author_last_name": "Admin"
-      }
-    ],
-    "terms": [
-      {
-        "term_id": 1,
-        "taxonomy": "category",
-        "slug": "uncategorized",
-        "name": "Uncategorized"
-      },
-      {
-        "term_id": 2,
-        "taxonomy": "category",
-        "slug": "dummy-category",
-        "name": "Dummy Category"
-      },
-      {
-        "term_id": 3,
-        "taxonomy": "post_tag",
-        "slug": "dummy-tag",
-        "name": "Dummy Tag"
-      }
-    ],
+  "channel": {    
     "items": [
       {
         "title": "This is dummy title A",

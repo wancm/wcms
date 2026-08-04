@@ -1,5 +1,6 @@
 ﻿using ContentImporter.Application.ContentProviders.ContentSource;
 using ContentImporter.Application.Publishers;
+using ContentImporter.Application.Repositories;
 using ContentImporter.Domain.Entities;
 using Microsoft.Extensions.Logging;
 using System.Collections.Concurrent;
@@ -7,7 +8,7 @@ using System.Diagnostics;
 
 namespace ContentImporter.Application.Pipelines
 {
-    public class ImportPipeline(ContentImporterChannel channel)
+    public class ImportPipeline(ContentImporterChannel channel, IContentRepository repository)
     {
         public async Task<ImportResult> RunAsync(IContentSource source, ILogger logger, CancellationToken cancellationToken = default)
         {
@@ -43,7 +44,7 @@ namespace ContentImporter.Application.Pipelines
                 {
                     var consumer = new ChannelConsumer();
 
-                    consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, cancellationToken);
+                    consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, repository, cancellationToken);
                 }
 
                 // we wait for all the consumers and producer to complete.
@@ -55,7 +56,8 @@ namespace ContentImporter.Application.Pipelines
 
                 //--- Publishing ----------------------------------------------------------------------------------------------
 
-                // Pushling the content items actually shall goes with above consumers,
+                // Note:
+                // Pushling the content items actually shall be included into the consumer above to run together with the pipeline,
                 // but for the sake of demonstrate threadsafe collection, I do it in a separate step.
                 Console.WriteLine("Publishing started.");
 
