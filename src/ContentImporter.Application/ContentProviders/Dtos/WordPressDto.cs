@@ -29,60 +29,6 @@ namespace ContentImporter.Application.ContentProviders.Dtos;
 /// <c>post_id</c>.
 /// </para>
 /// </remarks>
-public sealed record WordPressChannelDto
-{
-    [JsonPropertyName("title")]
-    public string? Title { get; init; }
-
-    [JsonPropertyName("link")]
-    public string? Link { get; init; }
-
-    [JsonPropertyName("description")]
-    public string? Description { get; init; }
-
-    [JsonPropertyName("pub_date")]
-    public string? PubDate { get; init; }
-
-    /// <summary>
-    /// The only language in the export. Core WordPress stores no per-post language — multilingual
-    /// sites need WPML or Polylang, which write it into <c>postmeta</c> instead. So every
-    /// ContentItem from a WordPress export inherits this one value, and if it is absent the import
-    /// has no language to fall back on but its own default.
-    /// </summary>
-    [JsonPropertyName("language")]
-    public string? Language { get; init; }
-
-    [JsonPropertyName("wxr_version")]
-    public string? WxrVersion { get; init; }
-
-    [JsonPropertyName("generator")]
-    public string? Generator { get; init; }
-
-    [JsonPropertyName("base_site_url")]
-    public string? BaseSiteUrl { get; init; }
-
-    [JsonPropertyName("base_blog_url")]
-    public string? BaseBlogUrl { get; init; }
-
-    [JsonPropertyName("authors")]
-    public IReadOnlyList<WordPressAuthorDto>? Authors { get; init; }
-
-    [JsonPropertyName("terms")]
-    public IReadOnlyList<WordPressTermDto>? Terms { get; init; }
-
-    // There is deliberately no Items property here.
-    //
-    // Adding one would make this the root object and let a caller write
-    // JsonSerializer.Deserialize<WordPressChannelDto>(...) — which pulls the entire export into
-    // memory in one allocation, the single thing this architecture exists to avoid. Authors and
-    // Terms are safe to materialise because they are bounded by how a site is administered;
-    // Items is bounded only by how much the customer has ever published.
-    //
-    // The reader instead consumes this header, then streams the items array element by element
-    // with a Utf8JsonReader, yielding one WordPressDto at a time. Both are children of the same
-    // "channel" object, and the header comes first, so a single forward-only pass works.
-}
-
 /// <summary>
 /// One row of the export's items array: a post, a page, an attachment or any custom post type.
 /// </summary>
@@ -103,7 +49,7 @@ public sealed record WordPressDto
     [JsonPropertyName("pub_date")]
     public string? PubDate { get; init; }
 
-    /// <summary>The author's login name, matching <see cref="WordPressAuthorDto.AuthorLogin"/>.</summary>
+    /// <summary>The author's login name, matching <c>author_login</c> in the export's header.</summary>
     [JsonPropertyName("creator")]
     public string? Creator { get; init; }
 
@@ -216,48 +162,11 @@ public sealed record WordPressDto
     public IReadOnlyList<WordPressPostMetaDto>? PostMeta { get; init; }
 }
 
-/// <summary>A site user, listed once in the channel and referenced by login on each item.</summary>
-public sealed record WordPressAuthorDto
-{
-    [JsonPropertyName("author_id")]
-    public long? AuthorId { get; init; }
 
-    [JsonPropertyName("author_login")]
-    public string? AuthorLogin { get; init; }
-
-    [JsonPropertyName("author_email")]
-    public string? AuthorEmail { get; init; }
-
-    [JsonPropertyName("author_display_name")]
-    public string? AuthorDisplayName { get; init; }
-
-    [JsonPropertyName("author_first_name")]
-    public string? AuthorFirstName { get; init; }
-
-    [JsonPropertyName("author_last_name")]
-    public string? AuthorLastName { get; init; }
-}
-
-/// <summary>A taxonomy term declared once at channel level, with its own id.</summary>
-public sealed record WordPressTermDto
-{
-    [JsonPropertyName("term_id")]
-    public long? TermId { get; init; }
-
-    /// <summary><c>category</c>, <c>post_tag</c>, or any custom taxonomy.</summary>
-    [JsonPropertyName("taxonomy")]
-    public string? Taxonomy { get; init; }
-
-    [JsonPropertyName("slug")]
-    public string? Slug { get; init; }
-
-    [JsonPropertyName("name")]
-    public string? Name { get; init; }
-}
 
 /// <summary>
-/// An item's reference to a term. Distinct from <see cref="WordPressTermDto"/> because WXR really
-/// does use different field names in the two places: the taxonomy is <c>domain</c> here and
+/// An item's reference to a term. Distinct from the term declared in the export's header, because
+/// WXR really does use different field names in the two places: the taxonomy is <c>domain</c> here and
 /// <c>taxonomy</c> there, the slug is <c>nicename</c> here and <c>slug</c> there, and no term id
 /// travels with the reference at all — terms are matched by slug.
 /// </summary>

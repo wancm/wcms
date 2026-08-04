@@ -87,6 +87,10 @@ namespace ContentImporter.Infrastructure.Notifications
          *   same transaction as the content, and let a separate relay publish it.
          */
 
+        private const string Cyan = "\u001b[96m";
+
+        private const string Reset = "\u001b[0m";
+
         private static readonly JsonSerializerOptions Format = new()
         {
             WriteIndented = true,
@@ -131,11 +135,19 @@ namespace ContentImporter.Infrastructure.Notifications
 
             text.AppendLine();
 
+            // Colour with ANSI escapes rather than Console.ForegroundColor. Setting the colour,
+            // writing and resetting is three operations, and consumers publish concurrently -
+            // one thread's colour would bleed into another's line. Escape codes travel inside
+            // the string, so the single Write below stays atomic.
+            text.Append(Cyan);
+
             // Indent the message so the header line stands out when several interleave.
             foreach (string line in JsonSerializer.Serialize(importEvent, importEvent.GetType(), Format).Split('\n'))
             {
                 text.Append("                              ").AppendLine(line.TrimEnd('\r'));
             }
+
+            text.Append(Reset);
 
             return text.ToString();
         }

@@ -1,4 +1,4 @@
-﻿using ContentImporter.Application.ContentProviders.ContentSource;
+using ContentImporter.Application.ContentProviders.ContentSource;
 using ContentImporter.Domain.Entities;
 
 namespace ContentImporter.Application.ContentProviders
@@ -16,7 +16,7 @@ namespace ContentImporter.Application.ContentProviders
         /// To validate the DTO after deserialization.
         /// This method should be called after DeserializeDtoAsync to ensure that the DTO is valid before proceeding with normalization.
         /// </summary>
-        Task<bool> ValidateDtoAsync();
+        Task<ValidationOutcome> ValidateDtoAsync();
 
         /// <summary>
         /// To map the DTO to a ContentItem entity that can be used for further processing or storage.

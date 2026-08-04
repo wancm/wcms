@@ -24,19 +24,38 @@ namespace ContentImporter.Application.ContentProviders.WordPress
             PublishedStatus, "draft", "pending", "private", "future", "trash", "inherit"
         };
 
-        public Task<bool> ValidateAsync(WordPressDto obj)
+        public Task<ValidationOutcome> ValidateAsync(WordPressDto obj)
         {
-            var isValidPostId = ValidatePostId(obj);
-            var isValidTitle = ValidateTitle(obj);
-            var isValidStatus = ValidateStatus(obj);
-            var isValidPublishDate = ValidatePublishDate(obj);
-
             // Deliberately no short-circuit: every rule runs even once one has failed, so this
-            // can return the list of reasons later instead of a bare bool.
+            // returns the full list of reasons rather than only the first.
             // Task.FromResult, not async: these are pure predicates over an in-memory DTO, so
             // there is nothing to await and no state machine worth paying for.
+            var failures = new List<string>();
+
+            // Phrased for whoever reads the import report, naming the source field rather than
+            // the rule - "post_id" is what they will search the export for.
+            if (!ValidatePostId(obj))
+            {
+                failures.Add("post_id is mandatory and must be greater than zero");
+            }
+
+            if (!ValidateTitle(obj))
+            {
+                failures.Add($"title is mandatory and must be {TitleMaxLength} characters or fewer");
+            }
+
+            if (!ValidateStatus(obj))
+            {
+                failures.Add($"status '{obj.Status}' is not one WordPress exports");
+            }
+
+            if (!ValidatePublishDate(obj))
+            {
+                failures.Add("a published item must carry a real post_date_gmt");
+            }
+
             return Task.FromResult(
-                isValidPostId && isValidTitle && isValidStatus && isValidPublishDate);
+                failures.Count == 0 ? ValidationOutcome.Valid : new ValidationOutcome(failures));
         }
 
         public bool ValidatePostId(WordPressDto obj)

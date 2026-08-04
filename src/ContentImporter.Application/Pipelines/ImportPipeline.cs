@@ -1,4 +1,4 @@
-﻿using ContentImporter.Application.ContentProviders.ContentSource;
+using ContentImporter.Application.ContentProviders.ContentSource;
 using ContentImporter.Application.Notifications;
 using ContentImporter.Application.Publishers;
 using ContentImporter.Application.Repositories;
@@ -44,8 +44,15 @@ namespace ContentImporter.Application.Pipelines
 
                 var producer = ChannelProducer.ProduceAsync(eventId, source, channel.Writer, errors, cancellationToken);
 
-                // One worker per core, all draining the same channel. Items are independent, so
-                // order is not preserved and does not need to be - except in one case worth
+                // async Task for each consumer, all draining the same channel.
+                // This is solely for demo purposes,
+                // DO NOT do async Task if the source are from a single Kafka partition, or any other source that guarantees order.
+                // It will break the offset tracking if error happens in one of the async task and can't be replay.
+                //
+                // If Kafka then we shall rely on differnt partition to parallel/load balance the traffic.
+                //
+                // I assume items are independent,
+                // so order is not preserved and does not need to be - except in one case worth
                 // knowing about: a page whose layout references a child component would need its
                 // children imported first. Nothing here enforces that, which is why the repository
                 // upserts by id rather than assuming anything about the order items arrive in.
@@ -53,8 +60,8 @@ namespace ContentImporter.Application.Pipelines
                 for (var i = 0; i < consumers.Length; i++)
                 {
                     var consumer = new ChannelConsumer();
-
                     consumers[i] = consumer.ConsumeAsync(eventId, channel.Reader, counters, errors, persistedContentItems, repository, cancellationToken);
+
                 }
 
                 // Finishes when the producer has read the whole source and every consumer has

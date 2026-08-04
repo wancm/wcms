@@ -1,0 +1,89 @@
+{
+  "channel": {
+    "language": "en-US",
+    "items": [
+      {
+        "title": "No post id - rejected, nothing to identify it by",
+        "link": "https://dummy.example.com/no-id/",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=0",
+        "content_encoded": "<!-- wp:paragraph --><p>An item with no post_id cannot be upserted idempotently.</p><!-- /wp:paragraph -->",
+        "post_date_gmt": "2026-08-05 10:00:00",
+        "post_name": "no-id",
+        "status": "publish",
+        "post_type": "post",
+        "categories": [],
+        "postmeta": []
+      },
+      {
+        "title": "   ",
+        "link": "https://dummy.example.com/blank-title/",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=901",
+        "content_encoded": "<!-- wp:paragraph --><p>A blank title is rejected rather than silently imported.</p><!-- /wp:paragraph -->",
+        "post_id": 901,
+        "post_date_gmt": "2026-08-05 10:05:00",
+        "post_name": "blank-title",
+        "status": "publish",
+        "post_type": "post",
+        "categories": [],
+        "postmeta": []
+      },
+      {
+        "title": "Unknown status - rejected",
+        "link": "https://dummy.example.com/unknown-status/",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=902",
+        "content_encoded": "<!-- wp:paragraph --><p>archived is not a status core WordPress can export.</p><!-- /wp:paragraph -->",
+        "post_id": 902,
+        "post_date_gmt": "2026-08-05 10:10:00",
+        "post_name": "unknown-status",
+        "status": "archived",
+        "post_type": "post",
+        "categories": [],
+        "postmeta": []
+      },
+      {
+        "title": "Published with the draft placeholder date - rejected",
+        "link": "https://dummy.example.com/no-date/",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=903",
+        "content_encoded": "<!-- wp:paragraph --><p>WordPress writes 0000-00-00 when it has no date. Published content needs a real one.</p><!-- /wp:paragraph -->",
+        "post_id": 903,
+        "post_date": "0000-00-00 00:00:00",
+        "post_date_gmt": "0000-00-00 00:00:00",
+        "post_name": "no-date",
+        "status": "publish",
+        "post_type": "post",
+        "categories": [],
+        "postmeta": []
+      },
+      {
+        "title": "Survivor - imported after the four above were rejected",
+        "link": "https://dummy.example.com/2026/08/survivor/",
+        "pub_date": "Wed, 05 Aug 2026 18:00:00 +0000",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=205",
+        "description": "",
+        "content_encoded": "<!-- wp:paragraph --><p>A bad item never stops the run. This one is in the same file as four rejects.</p><!-- /wp:paragraph -->",
+        "excerpt_encoded": "Proof the run carries on.",
+        "post_id": 205,
+        "post_date": "2026-08-06 02:00:00",
+        "post_date_gmt": "2026-08-05 18:00:00",
+        "post_modified": "2026-08-06 02:00:00",
+        "post_modified_gmt": "2026-08-05 18:00:00",
+        "comment_status": "open",
+        "ping_status": "open",
+        "post_name": "survivor",
+        "status": "publish",
+        "post_parent": 0,
+        "menu_order": 0,
+        "post_type": "post",
+        "post_password": "",
+        "is_sticky": 0,
+        "categories": [],
+        "postmeta": []
+      }
+    ]
+  }
+}

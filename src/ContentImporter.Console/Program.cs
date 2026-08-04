@@ -12,8 +12,12 @@ using Microsoft.Extensions.Logging;
 // builds the host but never calls host.RunAsync() - there is no hosted service and nothing to
 // keep alive.
 //
-// A real ingest would be triggered by an API call or a message broker such as Azure Service Bus
-// or Kafka. This demo uses the simplest trigger that shows the same shape: a folder of files.
+// A real ingest would be triggered by an API call or a message broker such as Azure Service Bus.
+//
+// For order gurantees message broker such as Kafka is not suitable for this demo,
+// because the pipeline runs multiple consumers in parallel that wil breaks the order (offset) of the messages.
+//
+// This demo uses the simplest trigger that shows the same shape: a folder of files.
 // Treat it as "an export has just landed in data/wordpress, import it".
 //
 // One import at a time. The pipeline holds per-run state - a bounded channel, counters, an error

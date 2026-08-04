@@ -23,10 +23,12 @@ namespace ContentImporter.Application.ContentProviders.WordPress
             dto = await serializer.SerializeAsync(sourceContentItem);
         }
 
-        public async Task<bool> ValidateDtoAsync()
+        public async Task<ValidationOutcome> ValidateDtoAsync()
         {
             // DeserializeDtoAsync has to run first - there is nothing to validate otherwise.
-            return dto is null ? false : await validator.ValidateAsync(dto);
+            return dto is null
+                ? new ValidationOutcome(["nothing to validate: DeserializeDtoAsync did not run"])
+                : await validator.ValidateAsync(dto);
         }
 
         public async Task<ContentItem> DtoMapEntityAsync()

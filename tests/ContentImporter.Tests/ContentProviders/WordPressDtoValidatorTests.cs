@@ -25,7 +25,7 @@ public sealed class WordPressDtoValidatorTests
     [Fact]
     public async Task A_well_formed_post_is_accepted()
     {
-        Assert.True(await Validator.ValidateAsync(ValidPost));
+        Assert.True((await Validator.ValidateAsync(ValidPost)).IsValid);
     }
 
     [Fact]
@@ -42,7 +42,7 @@ public sealed class WordPressDtoValidatorTests
             PostDateGmt = null
         };
 
-        Assert.True(await Validator.ValidateAsync(attachment));
+        Assert.True((await Validator.ValidateAsync(attachment)).IsValid);
     }
 
     [Theory]
@@ -51,7 +51,7 @@ public sealed class WordPressDtoValidatorTests
     [InlineData(-1L)]
     public async Task An_item_without_a_usable_post_id_is_rejected(long? postId)
     {
-        Assert.False(await Validator.ValidateAsync(ValidPost with { PostId = postId }));
+        Assert.False((await Validator.ValidateAsync(ValidPost with { PostId = postId })).IsValid);
     }
 
     [Theory]
@@ -60,7 +60,7 @@ public sealed class WordPressDtoValidatorTests
     [InlineData("   ")]
     public async Task An_item_without_a_title_is_rejected(string? title)
     {
-        Assert.False(await Validator.ValidateAsync(ValidPost with { Title = title }));
+        Assert.False((await Validator.ValidateAsync(ValidPost with { Title = title })).IsValid);
     }
 
     [Fact]
@@ -68,8 +68,8 @@ public sealed class WordPressDtoValidatorTests
     {
         string tooLong = new('x', WordPressDtoValidator.TitleMaxLength + 1);
 
-        Assert.False(await Validator.ValidateAsync(ValidPost with { Title = tooLong }));
-        Assert.True(await Validator.ValidateAsync(ValidPost with { Title = tooLong[..^1] }));
+        Assert.False((await Validator.ValidateAsync(ValidPost with { Title = tooLong })).IsValid);
+        Assert.True((await Validator.ValidateAsync(ValidPost with { Title = tooLong[..^1] })).IsValid);
     }
 
     [Theory]
@@ -89,7 +89,7 @@ public sealed class WordPressDtoValidatorTests
             PostDateGmt = status == "publish" ? ValidPost.PostDateGmt : null
         };
 
-        Assert.True(await Validator.ValidateAsync(item));
+        Assert.True((await Validator.ValidateAsync(item)).IsValid);
     }
 
     [Theory]
@@ -98,13 +98,13 @@ public sealed class WordPressDtoValidatorTests
     [InlineData("archived")]
     public async Task An_unrecognised_status_is_rejected(string? status)
     {
-        Assert.False(await Validator.ValidateAsync(ValidPost with { Status = status }));
+        Assert.False((await Validator.ValidateAsync(ValidPost with { Status = status })).IsValid);
     }
 
     [Fact]
     public async Task A_published_item_without_a_date_is_rejected()
     {
-        Assert.False(await Validator.ValidateAsync(ValidPost with { PostDateGmt = null }));
+        Assert.False((await Validator.ValidateAsync(ValidPost with { PostDateGmt = null })).IsValid);
     }
 
     [Fact]
@@ -112,12 +112,12 @@ public sealed class WordPressDtoValidatorTests
     {
         // The serializer deliberately keeps this literal as text rather than failing to parse it,
         // which makes rejecting it this layer's job.
-        Assert.False(await Validator.ValidateAsync(ValidPost with { PostDateGmt = "0000-00-00 00:00:00" }));
+        Assert.False((await Validator.ValidateAsync(ValidPost with { PostDateGmt = "0000-00-00 00:00:00" })).IsValid);
     }
 
     [Fact]
     public async Task A_draft_without_a_date_is_accepted()
     {
-        Assert.True(await Validator.ValidateAsync(ValidPost with { Status = "draft", PostDateGmt = null }));
+        Assert.True((await Validator.ValidateAsync(ValidPost with { Status = "draft", PostDateGmt = null })).IsValid);
     }
 }
