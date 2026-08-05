@@ -1,5 +1,11 @@
 # CLAUDE.md — WCMS Content Import Demo (Sitecore interview task)
 
+## Status
+
+**v1 is done.** `dotnet build` and `dotnet test` are green (65 tests), and `dotnet run`
+demonstrates an import end to end. What was built, and how it differs from the original design,
+is recorded in [PLAN.md](./PLAN.md). Anything further is v2 — see the backlog there.
+
 ## Context and prime directive
 
 This is a take-home technical task for a Sitecore job interview. I (the user) must
@@ -29,6 +35,11 @@ This is a **demo**. Demonstrating the idea clearly beats implementing it fully.
 - If you think the simple version is genuinely wrong, say it in one sentence, then
   write the simple version anyway.
 
+This rule won several arguments during v1, and the losers are listed in PLAN.md under
+"Where v1 departs from the original plan". `JsonDocument` over `Utf8JsonReader` is the clearest
+case: the plan called streaming non-negotiable, and the demo loads one export whole with a
+comment naming the shortcut.
+
 ## The task (from the interviewer's email)
 
 > "For one of our Web Content Management Systems (WCMS) we need to provide a facility
@@ -40,88 +51,95 @@ Deliverable: a small solution that demonstrates the concepts (not a production s
 
 ## What is being evaluated (from the email — treat as requirements)
 
-- Async parallel programming
-- Memory allocations and management
-- .NET types: IEnumerable / IQueryable / IAsyncEnumerable, thread-safe collections
-- Code design best practices and extensible architecture
-- Unit testing
-- Ability to explain concepts/patterns to others
-- Nice to have: CI/CD, SQL and object/document databases, event-driven solutions,
-  app monitoring and troubleshooting
+| | Where it shows up in v1 |
+|---|---|
+| Async parallel programming | Bounded `Channel<T>`, N consumers, `Parallel.ForEachAsync`, cancellation |
+| Memory allocations and management | Channel capacity as the memory ceiling; claim-check events; immutable records |
+| .NET types: IEnumerable / IQueryable / IAsyncEnumerable, thread-safe collections | `IAsyncEnumerable` source; `ConcurrentBag`/`Dictionary`/`Queue`; `Interlocked` |
+| Code design best practices and extensible architecture | Ports and adapters, four projects, the provider factory |
+| Unit testing | 65 xunit tests, hand-rolled fakes |
+| Ability to explain concepts/patterns to others | The reason this repo was built in small steps |
+| Nice to have: CI/CD, SQL and document DBs, event-driven, monitoring | SQLite repository, event-driven notification. **CI is still missing** |
 
 ## Agreed assumptions and constraints
 
-- .NET 8 (LTS), C# latest, nullable enabled, implicit usings.
-- Console demo app + class library + xUnit test project. No hosted service/API.
-- Source formats: JSON and XML adapters (to demonstrate the extension point).
-  "Exports may be arbitrarily large" is the *story*; the demo code may still read a
-  small sample file whole, with a one-line comment naming the shortcut. Real
-  streaming stays a talking point unless I ask for it. The **pipeline** is still a
-  genuine bounded-channel producer/consumer — that part is the point of the task.
-- Upstream notification: event-driven via an in-process publisher **abstraction**
-  (interface + event records), designed so a real broker (Azure Service Bus /
-  Kafka / RabbitMQ) implementation could be slotted in later. No real broker.
-- No external NuGet dependencies except xunit + test SDK. No mocking framework —
-  hand-rolled fakes.
-- Include a GitHub Actions workflow (restore, build, test).
+- .NET 8 (LTS), C# latest, nullable enabled, implicit usings, warnings as errors.
+- Console demo app + class libraries + xUnit test project. No hosted service/API.
+- Upstream notification: event-driven via an in-process **abstraction** (`IUpstreamNotifier`
+  plus event records), designed so a real broker (Azure Service Bus / Kafka / RabbitMQ) could be
+  slotted in later. No real broker.
+- No mocking framework — hand-rolled fakes.
 
-## Target architecture (already decided — rebuild this, don't reinvent)
+**Constraints that were revised during v1** — the earlier text is kept so the change is visible:
 
-Producer/consumer pipeline on System.Threading.Channels:
+- ~~No external NuGet dependencies except xunit + test SDK.~~ Now also
+  `Microsoft.Extensions.Hosting` (DI, `ILogger`, the standard host) and `Microsoft.Data.Sqlite`
+  (SQL was a listed nice-to-have). Both are deliberate, both are defensible out loud.
+- ~~No DI container; the composition root wires by hand.~~ Reversed for the same reason.
+  `Program.cs` is still the only place a concrete Infrastructure type is named.
+- ~~Source formats: JSON and XML adapters.~~ Only JSON/WordPress was built. The extension point
+  is demonstrated by `PipelineExecutorFactory` and the ports rather than by a second provider.
+- "Exports may be arbitrarily large" remains the *story*; v1 reads a sample export whole with a
+  one-line comment naming the shortcut. The **pipeline** is a genuine bounded-channel
+  producer/consumer — that part was never compromised.
+
+## Architecture (as built)
 
 ```
-IContentSource (Strategy; JSON, XML adapters)
-    │  IAsyncEnumerable<ContentItem>   (streaming, one item at a time)
+IContentSource (WordPressJsonContentSource)
+    │  IAsyncEnumerable<SourceContentItem>
     ▼
-bounded Channel<ContentItem>           (FullMode=Wait → backpressure, O(capacity) memory)
+bounded Channel<SourceContentItem>        (capacity 12, FullMode=Wait → backpressure)
     ▼
-N parallel consumer workers            (per-item error isolation; cancellation propagates)
-    ├─▶ IContentRepository             (Repository; ConcurrentDictionary upsert by SourceId = idempotent)
-    └─▶ IUpstreamNotifier              (Observer/pub-sub; ContentImported per item, ImportCompleted per run)
+N consumers                               (per-item error isolation; cancellation propagates)
+    │  deserialize → validate → map → upsert
+    ▼
+ContentPublisher                          (separate pass, Parallel.ForEachAsync, dedupe by Id)
+    └─▶ IUpstreamNotifier                 (ContentImported per item, ImportCompleted per run)
 ```
 
-- `ContentItem` and all events are immutable records; shared mutable state limited
-  to Interlocked counter + ConcurrentBag<ImportError>.
-- Options object: MaxDegreeOfParallelism, ChannelCapacity.
-- Result object: imported count, failed count, errors, duration.
-- Per-item failure never aborts the run; OperationCanceledException always propagates.
+- `ContentItem` and all events are immutable records; shared mutable state is limited to
+  `Interlocked` counters and concurrent collections.
+- Per-item failure never aborts the run; `OperationCanceledException` always propagates.
 
 ## Working agreement (how we build — follow strictly)
 
-1. **Plan first.** Before any code, produce a short implementation plan (component
-   list + build order). I will run `/grill-me` against the plan; refine it based on
-   that session before implementing.
-2. **Small steps.** Implement ONE component per step, in this order unless the plan
-   says otherwise: model → abstractions + events → in-memory repository → notifier →
-   pipeline (the big one — may itself be split: skeleton → producer → consumers →
-   error handling) → JSON source → XML source → console app → CI workflow.
-3. **Explain → code → test → check.** For each step: first explain the concept and
-   the "why" (2–3 short paragraphs max), then the code, then its unit tests, then
-   STOP and ask me one comprehension question about what we just wrote. Do not
-   proceed to the next step until I answer and confirm I'm ready.
-4. **One question at a time.** In design discussions, ask me a single question and
-   wait — never a batch of questions.
-5. **Anticipate the interview.** At the end of each step, list 1–2 likely
-   interviewer follow-up questions about that component (e.g. "why a bounded
-   channel over Parallel.ForEachAsync?") with brief model answers.
-6. Run `dotnet build` and `dotnet test` after every step; a step is not done until
-   both pass.
+v1 was built this way and v2 should be too.
+
+1. **Small steps.** One component per step. Never dump the whole application at once.
+2. **Explain → code → test → check.** For each step: first explain the concept and the "why"
+   (2–3 short paragraphs max), then the code, then its unit tests, then STOP and ask me one
+   comprehension question. Do not proceed until I answer.
+3. **One question at a time.** In design discussions, ask a single question and wait — never a
+   batch.
+4. **Anticipate the interview.** At the end of each step, list 1–2 likely interviewer follow-up
+   questions about that component, with brief model answers.
+5. Run `dotnet build` and `dotnet test` after every step; a step is not done until both pass.
+6. **Tell me when I am wrong.** If a decision I have made is worse than the alternative, say so
+   in one sentence before implementing it. Several entries in PLAN.md's departures table came
+   out of exactly that.
 
 ## Coding standards
 
-- Library code uses ConfigureAwait(false); CancellationToken on every async seam.
+- Library code uses `ConfigureAwait(false)`; `CancellationToken` on every async seam.
+- Do not mark a method `async` when it has nothing to await — `Task.FromResult` instead.
+  Warnings are errors, and CS1998 will fail the build.
 - One-line XML `<summary>` on public types. No `<remarks>` unless I ask.
-- Prefer sealed classes, records, init-only properties. No locks — thread-safe
-  collections and immutability only.
-- Tests: behavior-focused names (e.g. `Failures_are_recorded_but_do_not_stop_the_import`),
-  exact assertions on counts, include at least: happy path at high parallelism,
-  partial failure, idempotent re-import, cancellation, failing source mid-stream,
-  concurrent repository writes, JSON/XML round-trip via temp files.
+- Prefer sealed classes, records, init-only properties. No locks — thread-safe collections and
+  immutability only, except where a non-thread-safe resource forces one (`SemaphoreSlim` guards
+  the SQLite connection).
+- Console output: compose one string and write once. Colour with ANSI escapes inside that string,
+  never `Console.ForegroundColor` — parallel writers would bleed into each other's lines.
+  Suppress escapes when output is redirected or `NO_COLOR` is set.
+- Tests: behavior-focused names (e.g. `Failures_are_recorded_but_do_not_stop_the_import`), exact
+  assertions on counts.
 
-## Definition of done
+## Definition of done — v1
 
-- `dotnet test` green; `dotnet run` demos an import end-to-end with visible events.
-- README explaining architecture, memory/async/extensibility rationale,
-  IEnumerable vs IQueryable vs IAsyncEnumerable talking points, and
-  "what I'd add for production" (outbox, retries, OpenTelemetry, checkpointing).
-- I can explain every file without help.
+- [x] `dotnet test` green
+- [x] `dotnet run` demos an import end to end with visible events
+- [x] README explaining how to run it, where the ingest data lives, and how to add to it
+- [x] ADRs for the two decisions worth recording
+- [ ] **GitHub Actions workflow (restore, build, test)** — still outstanding
+- [ ] Test coverage for cancellation, a failing source mid-stream, and high parallelism
+- [x] I can explain every file without help
