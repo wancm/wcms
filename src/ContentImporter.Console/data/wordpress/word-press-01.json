@@ -1,0 +1,40 @@
+{
+  "channel": {
+    "language": "en-US",
+    "items": [
+      {
+        "title": "dummy test title 101",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?page_id=101",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 101.</p><!-- /wp:paragraph -->",
+        "post_id": 101,
+        "post_date_gmt": "2026-01-01 00:00:00",
+        "post_name": "dummy-test-title-101",
+        "status": "publish",
+        "post_type": "page"
+      },
+      {
+        "title": "dummy test title 102",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?page_id=102",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 102.</p><!-- /wp:paragraph -->",
+        "post_id": 102,
+        "post_date_gmt": "2026-01-02 00:00:00",
+        "post_name": "dummy-test-title-102",
+        "status": "publish",
+        "post_type": "page"
+      },
+      {
+        "title": "dummy test title 103",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=103",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 103.</p><!-- /wp:paragraph -->",
+        "post_id": 103,
+        "post_date_gmt": "2026-01-03 00:00:00",
+        "post_name": "dummy-test-title-103",
+        "status": "publish",
+        "post_type": "post"
+      }
+    ]
+  }
+}

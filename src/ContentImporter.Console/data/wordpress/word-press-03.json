@@ -1,0 +1,29 @@
+{
+  "channel": {
+    "language": "en-US",
+    "items": [
+      {
+        "title": "dummy test title 101 - corrected",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?page_id=101",
+        "content_encoded": "<!-- wp:paragraph --><p>Corrected body for 101.</p><!-- /wp:paragraph -->",
+        "post_id": 101,
+        "post_date_gmt": "2026-01-01 00:00:00",
+        "post_name": "dummy-test-title-101",
+        "status": "publish",
+        "post_type": "page"
+      },
+      {
+        "title": "dummy test title 106",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=106",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 106.</p><!-- /wp:paragraph -->",
+        "post_id": 106,
+        "post_date_gmt": "2026-01-06 00:00:00",
+        "post_name": "dummy-test-title-106",
+        "status": "publish",
+        "post_type": "post"
+      }
+    ]
+  }
+}

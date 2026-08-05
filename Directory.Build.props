@@ -1,0 +1,24 @@
+<Project>
+
+  <!--
+    One policy for every project in the solution. Individual .csproj files deliberately do not
+    declare TargetFramework, Nullable or ImplicitUsings so that this is the only place they are
+    set and they cannot drift apart.
+  -->
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+
+    <!--
+      Temporary. GenerateDocumentationFile turns every undocumented public member into CS1591,
+      which TreatWarningsAsErrors then makes a build failure. Remove this line at the final
+      polish step so that "XML docs on public types" becomes compiler-enforced.
+    -->
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
+  </PropertyGroup>
+
+</Project>

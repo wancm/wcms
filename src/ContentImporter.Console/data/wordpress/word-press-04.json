@@ -1,0 +1,61 @@
+{
+  "channel": {
+    "language": "en-US",
+    "items": [
+      {
+        "title": "dummy test title with no post_id",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=0",
+        "content_encoded": "<!-- wp:paragraph --><p>No post_id, so nothing to upsert on.</p><!-- /wp:paragraph -->",
+        "post_date_gmt": "2026-01-07 00:00:00",
+        "post_name": "no-post-id",
+        "status": "publish",
+        "post_type": "post"
+      },
+      {
+        "title": "   ",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=901",
+        "content_encoded": "<!-- wp:paragraph --><p>Whitespace-only title.</p><!-- /wp:paragraph -->",
+        "post_id": 901,
+        "post_date_gmt": "2026-01-07 00:00:00",
+        "post_name": "blank-title",
+        "status": "publish",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 902",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=902",
+        "content_encoded": "<!-- wp:paragraph --><p>archived is not a status WordPress exports.</p><!-- /wp:paragraph -->",
+        "post_id": 902,
+        "post_date_gmt": "2026-01-07 00:00:00",
+        "post_name": "unknown-status",
+        "status": "archived",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 903",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=903",
+        "content_encoded": "<!-- wp:paragraph --><p>Published, but carrying the placeholder date.</p><!-- /wp:paragraph -->",
+        "post_id": 903,
+        "post_date_gmt": "0000-00-00 00:00:00",
+        "post_name": "published-without-a-date",
+        "status": "publish",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 107",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=107",
+        "content_encoded": "<!-- wp:paragraph --><p>Valid, in the same file as four rejects.</p><!-- /wp:paragraph -->",
+        "post_id": 107,
+        "post_date_gmt": "2026-01-07 00:00:00",
+        "post_name": "dummy-test-title-107",
+        "status": "publish",
+        "post_type": "post"
+      }
+    ]
+  }
+}

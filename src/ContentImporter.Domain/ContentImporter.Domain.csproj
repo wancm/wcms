@@ -1,0 +1,8 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The centre of the dependency graph. This project references nothing, by design - every
+    dependency arrow in the solution points inward, towards here.
+  -->
+
+</Project>

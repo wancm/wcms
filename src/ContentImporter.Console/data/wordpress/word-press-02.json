@@ -1,0 +1,29 @@
+{
+  "channel": {
+    "language": "en-US",
+    "items": [
+      {
+        "title": "dummy test title 104",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=104",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 104.</p><!-- /wp:paragraph -->",
+        "post_id": 104,
+        "post_date_gmt": "2026-01-04 00:00:00",
+        "post_name": "dummy-test-title-104",
+        "status": "publish",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 105",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=105",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 105.</p><!-- /wp:paragraph -->",
+        "post_id": 105,
+        "post_date_gmt": "2026-01-05 00:00:00",
+        "post_name": "dummy-test-title-105",
+        "status": "publish",
+        "post_type": "post"
+      }
+    ]
+  }
+}

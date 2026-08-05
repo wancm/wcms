@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Implements the ports that Application declares. The dependency points inward: Infrastructure
+    knows about Application, never the reverse.
+  -->
+  <ItemGroup>
+    <ProjectReference Include="..\ContentImporter.Application\ContentImporter.Application.csproj" />
+    <ProjectReference Include="..\ContentImporter.Domain\ContentImporter.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="8.0.10" />
+  </ItemGroup>
+
+</Project>
