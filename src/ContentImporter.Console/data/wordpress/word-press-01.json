@@ -3,247 +3,37 @@
     "language": "en-US",
     "items": [
       {
-        "title": "This is dummy title A",
-        "link": "https://dummy.example.com/dummy-page-a/",
-        "pub_date": "Thu, 01 Jan 2026 00:00:00 +0000",
+        "title": "dummy test title 101",
         "creator": "dummyadmin",
         "guid": "https://dummy.example.com/?page_id=101",
-        "description": "",
-        "content_encoded": "<!-- wp:paragraph --><p>This is dummy body content for page A.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 101.</p><!-- /wp:paragraph -->",
         "post_id": 101,
-        "post_date": "2026-01-01 00:00:00",
         "post_date_gmt": "2026-01-01 00:00:00",
-        "post_modified": "2026-01-01 00:00:00",
-        "post_modified_gmt": "2026-01-01 00:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "dummy-page-a",
+        "post_name": "dummy-test-title-101",
         "status": "publish",
-        "post_parent": 0,
-        "menu_order": 1,
-        "post_type": "page",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_page_template",
-            "value": "default"
-          }
-        ]
+        "post_type": "page"
       },
       {
-        "title": "This is dummy title B",
-        "link": "https://dummy.example.com/dummy-page-b/",
-        "pub_date": "Fri, 02 Jan 2026 00:00:00 +0000",
+        "title": "dummy test title 102",
         "creator": "dummyadmin",
         "guid": "https://dummy.example.com/?page_id=102",
-        "description": "",
-        "content_encoded": "<!-- wp:paragraph --><p>This is dummy body content for page B.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 102.</p><!-- /wp:paragraph -->",
         "post_id": 102,
-        "post_date": "2026-01-02 00:00:00",
         "post_date_gmt": "2026-01-02 00:00:00",
-        "post_modified": "2026-01-02 00:00:00",
-        "post_modified_gmt": "2026-01-02 00:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "dummy-page-b",
+        "post_name": "dummy-test-title-102",
         "status": "publish",
-        "post_parent": 0,
-        "menu_order": 2,
-        "post_type": "page",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_page_template",
-            "value": "default"
-          },
-          {
-            "key": "_thumbnail_id",
-            "value": "301"
-          }
-        ]
+        "post_type": "page"
       },
       {
-        "title": "This is dummy title C",
-        "link": "https://dummy.example.com/dummy-page-b/dummy-page-c/",
-        "pub_date": "Sat, 03 Jan 2026 00:00:00 +0000",
+        "title": "dummy test title 103",
         "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/?page_id=103",
-        "description": "",
-        "content_encoded": "<!-- wp:paragraph --><p>This is dummy body content for page C.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "",
+        "guid": "https://dummy.example.com/?p=103",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 103.</p><!-- /wp:paragraph -->",
         "post_id": 103,
-        "post_date": "2026-01-03 00:00:00",
         "post_date_gmt": "2026-01-03 00:00:00",
-        "post_modified": "2026-01-03 00:00:00",
-        "post_modified_gmt": "2026-01-03 00:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "dummy-page-c",
+        "post_name": "dummy-test-title-103",
         "status": "publish",
-        "post_parent": 102,
-        "menu_order": 3,
-        "post_type": "page",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_page_template",
-            "value": "default"
-          }
-        ]
-      },
-      {
-        "title": "This is dummy title D",
-        "link": "https://dummy.example.com/2026/01/dummy-post-d/",
-        "pub_date": "Sun, 04 Jan 2026 00:00:00 +0000",
-        "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/?p=201",
-        "description": "",
-        "content_encoded": "<!-- wp:paragraph --><p>This is dummy body content for post D.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "This is a dummy excerpt for post D.",
-        "post_id": 201,
-        "post_date": "2026-01-04 00:00:00",
-        "post_date_gmt": "2026-01-04 00:00:00",
-        "post_modified": "2026-01-04 00:00:00",
-        "post_modified_gmt": "2026-01-04 00:00:00",
-        "comment_status": "open",
-        "ping_status": "open",
-        "post_name": "dummy-post-d",
-        "status": "publish",
-        "post_parent": 0,
-        "menu_order": 0,
-        "post_type": "post",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [
-          {
-            "domain": "category",
-            "nicename": "dummy-category",
-            "name": "Dummy Category"
-          },
-          {
-            "domain": "post_tag",
-            "nicename": "dummy-tag",
-            "name": "Dummy Tag"
-          }
-        ],
-        "postmeta": [
-          {
-            "key": "_thumbnail_id",
-            "value": "302"
-          }
-        ]
-      },
-      {
-        "title": "This is dummy title E",
-        "link": "https://dummy.example.com/2026/01/dummy-post-e/",
-        "pub_date": "Mon, 05 Jan 2026 00:00:00 +0000",
-        "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/?p=202",
-        "description": "",
-        "content_encoded": "<!-- wp:paragraph --><p>This is dummy body content for post E.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "This is a dummy excerpt for post E.",
-        "post_id": 202,
-        "post_date": "2026-01-05 00:00:00",
-        "post_date_gmt": "2026-01-05 00:00:00",
-        "post_modified": "2026-02-01 00:00:00",
-        "post_modified_gmt": "2026-02-01 00:00:00",
-        "comment_status": "open",
-        "ping_status": "open",
-        "post_name": "dummy-post-e",
-        "status": "publish",
-        "post_parent": 0,
-        "menu_order": 0,
-        "post_type": "post",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [
-          {
-            "domain": "category",
-            "nicename": "dummy-category",
-            "name": "Dummy Category"
-          }
-        ],
-        "postmeta": []
-      },
-      {
-        "title": "dummy-image-one",
-        "link": "https://dummy.example.com/dummy-page-b/dummy-image-one/",
-        "pub_date": "Fri, 02 Jan 2026 00:00:00 +0000",
-        "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/wp-content/uploads/2026/01/dummy-image-one.jpg",
-        "description": "",
-        "content_encoded": "",
-        "excerpt_encoded": "This is a dummy image.",
-        "post_id": 301,
-        "post_date": "2026-01-02 00:00:00",
-        "post_date_gmt": "2026-01-02 00:00:00",
-        "post_modified": "2026-01-02 00:00:00",
-        "post_modified_gmt": "2026-01-02 00:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "dummy-image-one",
-        "status": "inherit",
-        "post_parent": 102,
-        "menu_order": 0,
-        "post_type": "attachment",
-        "post_password": "",
-        "is_sticky": 0,
-        "attachment_url": "https://dummy.example.com/wp-content/uploads/2026/01/dummy-image-one.jpg",
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_attached_file",
-            "value": "2026/01/dummy-image-one.jpg"
-          },
-          {
-            "key": "_wp_attachment_image_alt",
-            "value": "This is a dummy image."
-          }
-        ]
-      },
-      {
-        "title": "dummy-image-two",
-        "link": "https://dummy.example.com/2026/01/dummy-post-d/dummy-image-two/",
-        "pub_date": "Sun, 04 Jan 2026 00:00:00 +0000",
-        "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/wp-content/uploads/2026/01/dummy-image-two.jpg",
-        "description": "",
-        "content_encoded": "",
-        "excerpt_encoded": "This is a dummy image.",
-        "post_id": 302,
-        "post_date": "2026-01-04 00:00:00",
-        "post_date_gmt": "2026-01-04 00:00:00",
-        "post_modified": "2026-01-04 00:00:00",
-        "post_modified_gmt": "2026-01-04 00:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "dummy-image-two",
-        "status": "inherit",
-        "post_parent": 201,
-        "menu_order": 0,
-        "post_type": "attachment",
-        "post_password": "",
-        "is_sticky": 0,
-        "attachment_url": "https://dummy.example.com/wp-content/uploads/2026/01/dummy-image-two.jpg",
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_attached_file",
-            "value": "2026/01/dummy-image-two.jpg"
-          },
-          {
-            "key": "_wp_attachment_image_alt",
-            "value": "This is a dummy image."
-          }
-        ]
+        "post_type": "post"
       }
     ]
   }

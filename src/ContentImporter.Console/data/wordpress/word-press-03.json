@@ -3,61 +3,26 @@
     "language": "en-US",
     "items": [
       {
-        "title": "This is dummy title A - CORRECTED",
-        "link": "https://dummy.example.com/dummy-page-a/",
-        "pub_date": "Wed, 05 Aug 2026 12:00:00 +0000",
+        "title": "dummy test title 101 - corrected",
         "creator": "dummyadmin",
         "guid": "https://dummy.example.com/?page_id=101",
-        "description": "",
-        "content_encoded": "<!-- wp:heading --><h2>Page A, corrected</h2><!-- /wp:heading --><!-- wp:paragraph --><p>This body replaces the one imported from the first export.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "Corrected copy for page A.",
+        "content_encoded": "<!-- wp:paragraph --><p>Corrected body for 101.</p><!-- /wp:paragraph -->",
         "post_id": 101,
-        "post_date": "2026-01-01 00:00:00",
         "post_date_gmt": "2026-01-01 00:00:00",
-        "post_modified": "2026-08-05 20:00:00",
-        "post_modified_gmt": "2026-08-05 12:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "dummy-page-a",
+        "post_name": "dummy-test-title-101",
         "status": "publish",
-        "post_parent": 0,
-        "menu_order": 1,
-        "post_type": "page",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_page_template",
-            "value": "default"
-          }
-        ]
+        "post_type": "page"
       },
       {
-        "title": "Migration notes",
-        "link": "https://dummy.example.com/2026/08/migration-notes/",
-        "pub_date": "Wed, 05 Aug 2026 12:00:00 +0000",
+        "title": "dummy test title 106",
         "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/?p=204",
-        "description": "",
-        "content_encoded": "<!-- wp:paragraph --><p>Anything imported twice keeps the newest copy, because storage upserts on the source id.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "How re-imports behave.",
-        "post_id": 204,
-        "post_date": "2026-08-05 20:15:00",
-        "post_date_gmt": "2026-08-05 12:15:00",
-        "post_modified": "2026-08-05 20:15:00",
-        "post_modified_gmt": "2026-08-05 12:15:00",
-        "comment_status": "open",
-        "ping_status": "open",
-        "post_name": "migration-notes",
+        "guid": "https://dummy.example.com/?p=106",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 106.</p><!-- /wp:paragraph -->",
+        "post_id": 106,
+        "post_date_gmt": "2026-01-06 00:00:00",
+        "post_name": "dummy-test-title-106",
         "status": "publish",
-        "post_parent": 0,
-        "menu_order": 0,
-        "post_type": "post",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [],
-        "postmeta": []
+        "post_type": "post"
       }
     ]
   }

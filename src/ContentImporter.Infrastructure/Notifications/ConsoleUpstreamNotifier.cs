@@ -87,9 +87,26 @@ namespace ContentImporter.Infrastructure.Notifications
          *   same transaction as the content, and let a separate relay publish it.
          */
 
-        private const string Cyan = "\u001b[96m";
-
+        // Bright ANSI (9x), not the standard set - standard blue on black is unreadable. The
+        // same palette and the same clock as the operator log, so the two read as one stream.
         private const string Reset = "\u001b[0m";
+
+        private const string Timestamp = "\u001b[90m";
+
+        private const string PerItemHeading = "\u001b[1;92m";
+
+        private const string RunHeading = "\u001b[1;95m";
+
+        private const string Subject = "\u001b[1;97m";
+
+        private const string Body = "\u001b[96m";
+
+        // No escapes at all when output is redirected or NO_COLOR is set - https://no-color.org.
+        private static readonly bool Colourise =
+            !Console.IsOutputRedirected &&
+            string.IsNullOrEmpty(Environment.GetEnvironmentVariable("NO_COLOR"));
+
+        private static string Colour(string code) => Colourise ? code : string.Empty;
 
         private static readonly JsonSerializerOptions Format = new()
         {
@@ -114,32 +131,34 @@ namespace ContentImporter.Infrastructure.Notifications
 
             Write(importEvent switch
             {
-                ContentImported imported => Block("CONTENT IMPORTED", imported.Id, imported),
-                ImportCompleted completed => Block("IMPORT COMPLETED", string.Empty, completed),
-                _ => Block(importEvent.GetType().Name, string.Empty, importEvent)
+                ContentImported imported => Block(PerItemHeading, "CONTENT IMPORTED", imported.Id, imported),
+                ImportCompleted completed => Block(RunHeading, "IMPORT COMPLETED", string.Empty, completed),
+                _ => Block(PerItemHeading, importEvent.GetType().Name, string.Empty, importEvent)
             });
 
             return Task.CompletedTask;
         }
 
-        private string Block(string heading, string subject, ImportEvent importEvent)
+        private string Block(string headingColour, string heading, string subject, ImportEvent importEvent)
         {
             var text = new StringBuilder();
-
-            text.Append(DateTime.Now.ToString("HH:mm:ss.fff")).Append("  ").Append(heading);
-
-            if (subject.Length > 0)
-            {
-                text.Append("  ").Append(subject);
-            }
-
-            text.AppendLine();
 
             // Colour with ANSI escapes rather than Console.ForegroundColor. Setting the colour,
             // writing and resetting is three operations, and consumers publish concurrently -
             // one thread's colour would bleed into another's line. Escape codes travel inside
             // the string, so the single Write below stays atomic.
-            text.Append(Cyan);
+            text.Append(Colour(Timestamp)).Append(DateTime.Now.ToString("HH:mm:ss.fff")).Append(Colour(Reset));
+
+            text.Append("  ").Append(Colour(headingColour)).Append(heading).Append(Colour(Reset));
+
+            if (subject.Length > 0)
+            {
+                text.Append("  ").Append(Colour(Subject)).Append(subject).Append(Colour(Reset));
+            }
+
+            text.AppendLine();
+
+            text.Append(Colour(Body));
 
             // Indent the message so the header line stands out when several interleave.
             foreach (string line in JsonSerializer.Serialize(importEvent, importEvent.GetType(), Format).Split('\n'))
@@ -147,7 +166,7 @@ namespace ContentImporter.Infrastructure.Notifications
                 text.Append("                              ").AppendLine(line.TrimEnd('\r'));
             }
 
-            text.Append(Reset);
+            text.Append(Colour(Reset));
 
             return text.ToString();
         }

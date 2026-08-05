@@ -16,11 +16,13 @@ namespace ContentImporter.Application.ContentProviders.WordPress
         private const string DefaultLanguage = "en-US";
 
         // No validation here: WordPressDtoValidator already rejected the items not worth mapping.
-        public async Task<ContentItem> MapAsync(WordPressDto dto)
+        // Task.FromResult, not async: mapping is a pure transform over an in-memory DTO, so there
+        // is nothing to await and no state machine worth paying for.
+        public Task<ContentItem> MapAsync(WordPressDto dto)
         {
             string externalId = dto.PostId?.ToString(CultureInfo.InvariantCulture) ?? string.Empty;
 
-            return new ContentItem
+            return Task.FromResult(new ContentItem
             {
                 // post_id alone is not an identity - two providers can both export item 201.
                 // Derived, not generated: a fresh Guid per run would make every re-import look
@@ -32,14 +34,14 @@ namespace ContentImporter.Application.ContentProviders.WordPress
                 Body = dto.ContentEncoded ?? string.Empty,
                 Language = DefaultLanguage,
                 ContentType = dto.PostType?.ToLowerInvariant() ?? string.Empty,
-                PublishedAt = await ParsePublishedAtAsync(dto.PostDateGmt)
-            };
+                PublishedAt = ParsePublishedAt(dto.PostDateGmt)
+            });
         }
 
         // Anything unusable means "never published" - a draft legitimately has no date.
         // That includes WordPress's "0000-00-00 00:00:00" placeholder, which fails the exact
         // parse on its own: month 00 and day 00 are not dates, so it needs no special case.
-        private static async Task<DateTimeOffset?> ParsePublishedAtAsync(string? postDateGmt)
+        private static DateTimeOffset? ParsePublishedAt(string? postDateGmt)
         {
             if (string.IsNullOrWhiteSpace(postDateGmt))
             {

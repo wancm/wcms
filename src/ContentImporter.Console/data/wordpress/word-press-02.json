@@ -3,67 +3,26 @@
     "language": "en-US",
     "items": [
       {
-        "title": "Contact Us",
-        "link": "https://dummy.example.com/contact-us/",
-        "pub_date": "Wed, 05 Aug 2026 00:00:00 +0000",
+        "title": "dummy test title 104",
         "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/?page_id=104",
-        "description": "",
-        "content_encoded": "<!-- wp:heading --><h2>Contact Us</h2><!-- /wp:heading --><!-- wp:paragraph --><p>Reach the team on +60 3 1234 5678, or write to hello@dummy.example.com.</p><!-- /wp:paragraph --><!-- wp:image --><figure class=\"wp-block-image\"><img src=\"https://picsum.photos/id/1015/800/400\" alt=\"Our office\"/></figure><!-- /wp:image -->",
-        "excerpt_encoded": "How to reach us.",
+        "guid": "https://dummy.example.com/?p=104",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 104.</p><!-- /wp:paragraph -->",
         "post_id": 104,
-        "post_date": "2026-08-05 09:00:00",
-        "post_date_gmt": "2026-08-05 01:00:00",
-        "post_modified": "2026-08-05 09:00:00",
-        "post_modified_gmt": "2026-08-05 01:00:00",
-        "comment_status": "closed",
-        "ping_status": "closed",
-        "post_name": "contact-us",
+        "post_date_gmt": "2026-01-04 00:00:00",
+        "post_name": "dummy-test-title-104",
         "status": "publish",
-        "post_parent": 0,
-        "menu_order": 4,
-        "post_type": "page",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [],
-        "postmeta": [
-          {
-            "key": "_wp_page_template",
-            "value": "default"
-          }
-        ]
+        "post_type": "post"
       },
       {
-        "title": "Announcing our new site",
-        "link": "https://dummy.example.com/2026/08/announcing-our-new-site/",
-        "pub_date": "Wed, 05 Aug 2026 00:00:00 +0000",
+        "title": "dummy test title 105",
         "creator": "dummyadmin",
-        "guid": "https://dummy.example.com/?p=203",
-        "description": "",
-        "content_encoded": "<!-- wp:heading --><h2>A fresh start</h2><!-- /wp:heading --><!-- wp:paragraph --><p>We have rebuilt the site from the ground up. Everything you had is still here.</p><!-- /wp:paragraph -->",
-        "excerpt_encoded": "We have rebuilt the site from the ground up.",
-        "post_id": 203,
-        "post_date": "2026-08-05 10:30:00",
-        "post_date_gmt": "2026-08-05 02:30:00",
-        "post_modified": "2026-08-05 10:30:00",
-        "post_modified_gmt": "2026-08-05 02:30:00",
-        "comment_status": "open",
-        "ping_status": "open",
-        "post_name": "announcing-our-new-site",
+        "guid": "https://dummy.example.com/?p=105",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 105.</p><!-- /wp:paragraph -->",
+        "post_id": 105,
+        "post_date_gmt": "2026-01-05 00:00:00",
+        "post_name": "dummy-test-title-105",
         "status": "publish",
-        "post_parent": 0,
-        "menu_order": 0,
-        "post_type": "post",
-        "post_password": "",
-        "is_sticky": 0,
-        "categories": [
-          {
-            "domain": "category",
-            "nicename": "dummy-category",
-            "name": "Dummy Category"
-          }
-        ],
-        "postmeta": []
+        "post_type": "post"
       }
     ]
   }

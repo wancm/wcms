@@ -4,9 +4,11 @@ using ContentImporter.Application.Pipelines;
 using ContentImporter.Application.Repositories;
 using ContentImporter.Infrastructure.Notifications;
 using ContentImporter.Infrastructure.Repositories;
+using ContentImporter.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
 
 // A demo host for the content import pipeline. It runs one import and exits, which is why it
 // builds the host but never calls host.RunAsync() - there is no hosted service and nothing to
@@ -27,14 +29,12 @@ using Microsoft.Extensions.Logging;
 HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
 // One line per entry, timestamped on the same clock the notifier uses, so the operator log and
-// the upstream messages can be read as one interleaved stream. The default two-line format puts
-// the category on its own line, which is unreadable next to anything else printing concurrently.
+// the upstream messages can be read as one interleaved stream. A custom formatter rather than
+// AddSimpleConsole because SimpleConsole's level colours are fixed constants - Information is
+// DarkGreen, Error is black on DarkRed - and neither is legible on a black background.
 builder.Logging.ClearProviders();
-builder.Logging.AddSimpleConsole(options =>
-{
-    options.SingleLine = true;
-    options.TimestampFormat = "HH:mm:ss.fff  ";
-});
+builder.Logging.AddConsole(o => o.FormatterName = ImportConsoleFormatter.FormatterName);
+builder.Logging.AddConsoleFormatter<ImportConsoleFormatter, ConsoleFormatterOptions>();
 
 // The channel is deliberately not registered here. It is state belonging to one import, not a
 // service: Channel<T> is single-use, since completing the writer is terminal, so a shared instance

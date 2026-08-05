@@ -1,0 +1,51 @@
+{
+  "channel": {
+    "language": "en-US",
+    "items": [
+      {
+        "title": "dummy test title 104 - corrected",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=104",
+        "content_encoded": "<!-- wp:paragraph --><p>Corrected body for 104.</p><!-- /wp:paragraph -->",
+        "post_id": 104,
+        "post_date_gmt": "2026-01-04 00:00:00",
+        "post_name": "dummy-test-title-104",
+        "status": "publish",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 108",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=108",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 108.</p><!-- /wp:paragraph -->",
+        "post_id": 108,
+        "post_date_gmt": "2026-01-08 00:00:00",
+        "post_name": "dummy-test-title-108",
+        "status": "publish",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 109",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=109",
+        "content_encoded": "<!-- wp:paragraph --><p>A draft: no date, and none owed.</p><!-- /wp:paragraph -->",
+        "post_id": 109,
+        "post_date_gmt": "0000-00-00 00:00:00",
+        "post_name": "dummy-test-title-109",
+        "status": "draft",
+        "post_type": "post"
+      },
+      {
+        "title": "dummy test title 110",
+        "creator": "dummyadmin",
+        "guid": "https://dummy.example.com/?p=110",
+        "content_encoded": "<!-- wp:paragraph --><p>Dummy body for 110.</p><!-- /wp:paragraph -->",
+        "post_id": 110,
+        "post_date_gmt": "2026-01-10 00:00:00",
+        "post_name": "dummy-test-title-110",
+        "status": "publish",
+        "post_type": "post"
+      }
+    ]
+  }
+}
