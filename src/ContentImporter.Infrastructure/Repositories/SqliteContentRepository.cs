@@ -25,6 +25,11 @@ namespace ContentImporter.Infrastructure.Repositories
 
         // OR IGNORE, so a row that is already there is left alone and reports 0 rows changed.
         // That is how we learn whether the item was new without asking first.
+        //
+        // fable5: --st*
+        // 用 OR IGNORE：如果行已经存在就保持不动，并报告 0 rows changed。
+        // 我们正是靠这一点、无需先查询就能知道这个 item 是不是新的。
+        // *en--
         private const string InsertSql = """
             INSERT OR IGNORE INTO content_item
                 (id, provider_code, external_id, title, body, language, content_type, published_at)
@@ -46,11 +51,22 @@ namespace ContentImporter.Infrastructure.Repositories
 
         // A ":memory:" database lives only as long as a connection to it. This one is held open
         // for the life of the repository - close it and the data is gone.
+        //
+        // fable5: --st*
+        // ":memory:" 数据库的寿命只等于与它的连接的寿命。这个连接在 repository 的整个生命周期中
+        // 保持打开 —— 一旦关闭，数据就没了。
+        // *en--
         private readonly SqliteConnection _connection;
 
         // SQLite allows one writer at a time. The pipeline's consumers all arrive here at once,
         // so the parallelism stops at this boundary. SemaphoreSlim rather than lock because
         // WaitAsync yields the thread instead of blocking it.
+        //
+        // fable5: --st*
+        // SQLite 同一时间只允许一个写入者。pipeline 的所有 consumers 会同时到达这里，
+        // 所以并行到这个边界为止。用 SemaphoreSlim 而不是 lock，
+        // 因为 WaitAsync 会让出（yield）线程而不是阻塞它。
+        // *en--
         private readonly SemaphoreSlim _writeLock = new(1, 1);
 
         public SqliteContentRepository()
@@ -64,6 +80,17 @@ namespace ContentImporter.Infrastructure.Repositories
              * Without the semaphore, two threads could be inside CreateCommand() / ExecuteNonQueryAsync() on one connection at the same time 
              * — which is undefined behaviour, not a queue.
              */
+            //
+            // fable5: --st*
+            // SqliteConnection 不是线程安全的。
+            // 和所有 ADO.NET connection 一样：“该类型的 public static 成员是线程安全的，
+            // 任何实例成员都不保证线程安全。” 我们的 repository 是 singleton，
+            // 因此 12 个 consumers 会并发地在同一个 connection 对象上调用 UpsertAsync。
+            //
+            // 没有 semaphore 的话，两个线程可能同时处于同一个 connection 的
+            // CreateCommand() / ExecuteNonQueryAsync() 内部 ——
+            // 那是未定义行为（undefined behaviour），而不是排队。
+            // *en--
 
             _connection = new SqliteConnection("Data Source=:memory:");
             _connection.Open();
@@ -84,6 +111,7 @@ namespace ContentImporter.Infrastructure.Repositories
                 var inserted = await ExecuteAsync(InsertSql, item, cancellationToken).ConfigureAwait(false);
 
                 // Already there: overwrite it. Upsert by id is what makes a re-import idempotent.
+                // fable5: --st* 已经存在：覆盖它。按 id upsert 正是 re-import 幂等（idempotent）的原因。 *en--
                 if (inserted == 0)
                 {
                     await ExecuteAsync(UpdateSql, item, cancellationToken).ConfigureAwait(false);
@@ -102,6 +130,11 @@ namespace ContentImporter.Infrastructure.Repositories
         {
             // Reads take the same lock as writes. It guards the shared connection, not the
             // database - a read running while an upsert is mid-command is the same race.
+            //
+            // fable5: --st*
+            // 读操作和写操作取同一把锁。这把锁保护的是共享的 connection，而不是数据库本身 ——
+            // 在某个 upsert 执行到一半时进行读取，是同一种竞争（race）。
+            // *en--
             await _writeLock.WaitAsync(cancellationToken).ConfigureAwait(false);
 
             try
@@ -169,6 +202,7 @@ namespace ContentImporter.Infrastructure.Repositories
             command.CommandText = sql;
 
             // Parameters, never string concatenation - the body is customer HTML.
+            // fable5: --st* 一律用参数（parameters），绝不做字符串拼接 —— body 可是客户提供的 HTML。 *en--
             command.Parameters.AddWithValue("@id", item.Id);
             command.Parameters.AddWithValue("@providerCode", item.ProviderCode);
             command.Parameters.AddWithValue("@externalId", item.ExternalId);

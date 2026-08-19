@@ -64,6 +64,7 @@ public sealed class WordPressDtoSerializerTests
         WordPressDto dto = await Serializer.SerializeAsync(Item(PostJson));
 
         // The item-level taxonomy names differ from the channel-level ones: domain/nicename here.
+        // fable5: --st* item 级的 taxonomy 命名与 channel 级不同：这里用的是 domain/nicename。 *en--
         Assert.Equal(2, dto.Categories!.Count);
         Assert.Equal("category", dto.Categories[0].Domain);
         Assert.Equal("dummy-category", dto.Categories[0].NiceName);
@@ -78,6 +79,7 @@ public sealed class WordPressDtoSerializerTests
     public async Task An_attachment_deserializes_like_any_other_item()
     {
         // WXR has no media section - an image is an item with post_type "attachment".
+        // fable5: --st* WXR 没有独立的 media 区块 —— 一张图片就是一个 post_type 为 "attachment" 的 item。 *en--
         WordPressDto dto = await Serializer.SerializeAsync(Item(
             """{ "post_id": 301, "post_type": "attachment", "status": "inherit", "post_parent": 102 }"""));
 
@@ -91,6 +93,12 @@ public sealed class WordPressDtoSerializerTests
     {
         // Nothing on the DTO is required, so a sparse item is a deserialize the validator can
         // then reject with a useful message - not a JsonException naming a byte offset.
+        //
+        // fable5: --st*
+        // DTO 上没有任何字段是 required 的，所以一个字段稀疏（sparse）的 item 也能成功
+        // deserialize，随后由 validator 用一条有用的消息去拒绝它 ——
+        // 而不是抛一个只报 byte offset 的 JsonException。
+        // *en--
         WordPressDto dto = await Serializer.SerializeAsync(Item("{}"));
 
         Assert.Null(dto.PostId);
@@ -103,6 +111,11 @@ public sealed class WordPressDtoSerializerTests
     {
         // WordPress writes this literal for drafts. Binding dates to DateTimeOffset would turn
         // an ordinary draft into a deserialization failure, so they stay strings.
+        //
+        // fable5: --st*
+        // WordPress 会给 draft 写入这个字面量。如果把日期绑定成 DateTimeOffset，
+        // 一个普通的 draft 就会变成 deserialization 失败，所以日期保持为字符串。
+        // *en--
         WordPressDto dto = await Serializer.SerializeAsync(
             Item("""{ "post_date": "0000-00-00 00:00:00" }"""));
 
@@ -125,6 +138,7 @@ public sealed class WordPressDtoSerializerTests
             () => Serializer.SerializeAsync(Item("null")));
 
         // The correlation id is what an operator quotes when asking what happened to one item.
+        // fable5: --st* correlation id 是 operator 在追问“某个 item 到底怎么了”时会引用的编号。 *en--
         Assert.Contains("corr-1", error.Message, StringComparison.Ordinal);
     }
 
@@ -132,6 +146,7 @@ public sealed class WordPressDtoSerializerTests
     public async Task Malformed_json_is_reported_as_a_json_error()
     {
         // A JsonException per item is what lets the pipeline isolate one bad item and carry on.
+        // fable5: --st* 每个 item 各自抛 JsonException，pipeline 才能隔离单个坏 item 并继续运行。 *en--
         await Assert.ThrowsAsync<JsonException>(() => Serializer.SerializeAsync(Item("{ not json")));
     }
 }

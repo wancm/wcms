@@ -5,6 +5,11 @@ using System.Text;
 
 // NOT namespace ContentImporter.Console.*: inside that namespace the identifier "Console" binds
 // to the namespace rather than System.Console.
+//
+// fable5: --st*
+// 不用 namespace ContentImporter.Console.*：在那个 namespace 里，
+// 标识符 "Console" 会绑定到 namespace 而不是 System.Console。
+// *en--
 namespace ContentImporter.Logging
 {
     /// <summary>
@@ -32,6 +37,7 @@ namespace ContentImporter.Logging
         private const string Verbose = "\u001b[90m";
 
         // No escapes at all when output is redirected or NO_COLOR is set - https://no-color.org.
+        // fable5: --st* 当输出被重定向（redirect）或设置了 NO_COLOR 时，完全不输出任何 escape —— 见 https://no-color.org。 *en--
         private static readonly bool Colourise =
             !Console.IsOutputRedirected &&
             string.IsNullOrEmpty(Environment.GetEnvironmentVariable("NO_COLOR"));
@@ -58,12 +64,14 @@ namespace ContentImporter.Logging
             string levelColour = ColourOf(logEntry.LogLevel);
 
             // One composed write, so a log line cannot interleave with a notifier block.
+            // fable5: --st* 拼好后一次 write，这样一条 log 行不可能与 notifier 的输出块交错。 *en--
             var text = new StringBuilder();
 
             text.Append(Colour(Timestamp)).Append(DateTime.Now.ToString("HH:mm:ss.fff")).Append(Colour(Reset));
             text.Append("  ").Append(Colour(levelColour)).Append(TokenOf(logEntry.LogLevel)).Append(Colour(Reset));
 
             // The message keeps the terminal's default foreground - only the level is coloured.
+            // fable5: --st* message 保持终端默认前景色 —— 只有 level 是带颜色的。 *en--
             text.Append("  ").Append(message);
 
             if (logEntry.Exception is not null)
@@ -76,6 +84,7 @@ namespace ContentImporter.Logging
         }
 
         // Four characters each, so messages line up whatever the level.
+        // fable5: --st* 每个 token 都是四个字符，这样无论什么 level，messages 都能对齐。 *en--
         private static string TokenOf(LogLevel level) => level switch
         {
             LogLevel.Trace => "trce",

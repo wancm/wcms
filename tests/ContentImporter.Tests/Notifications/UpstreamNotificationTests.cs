@@ -100,6 +100,7 @@ public sealed class UpstreamNotificationTests : IDisposable
         RecordingNotifier notifier = await RunAsync();
 
         // One import, one event id - that is what makes a log searchable after the fact.
+        // fable5: --st* 一次 import 只有一个 event id —— 正是这一点让日志在事后可以被检索。 *en--
         Assert.Single(notifier.Events.Select(e => e.EventId).Distinct());
     }
 
@@ -126,6 +127,11 @@ public sealed class UpstreamNotificationTests : IDisposable
     {
         // A notification says what happened; it does not replicate the data. Real brokers cap
         // message size, and a consumer invalidating a cache does not need the markup.
+        //
+        // fable5: --st*
+        // notification 说的是“发生了什么”，而不是复制数据本身。真实的 broker 会限制 message 大小，
+        // 而一个要做缓存失效（cache invalidation）的 consumer 并不需要那些 markup。
+        // *en--
         var item = new ContentItem
         {
             Id = "wordpress:1",

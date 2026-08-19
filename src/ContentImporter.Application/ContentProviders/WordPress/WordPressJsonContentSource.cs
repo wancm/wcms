@@ -8,6 +8,11 @@ namespace ContentImporter.Application.ContentProviders.WordPress
     {
         // The folder is the contract: a file dropped in /wordpress came from WordPress.
         // In a real ingest each provider owns its own landing folder.
+        //
+        // fable5: --st*
+        // folder 本身就是契约（contract）：放进 /wordpress 的文件就是来自 WordPress 的。
+        // 在真实的 ingest 中，每个 provider 拥有自己独立的落地目录（landing folder）。
+        // *en--
         private const string ProviderCode = "WordPress";
 
         private static readonly string DefaultExportFolder =
@@ -64,6 +69,11 @@ namespace ContentImporter.Application.ContentProviders.WordPress
 
             // Demo shortcut: this loads one whole export into memory. Fine for a sample file,
             // but the real thing would stream with Utf8JsonReader - see the README trade-off.
+            //
+            // fable5: --st*
+            // demo 捷径（shortcut）：这里会把一整份 export 全部加载进内存。对示例文件来说没问题，
+            // 但真实系统应该用 Utf8JsonReader 做 streaming —— 权衡（trade-off）见 README。
+            // *en--
             using JsonDocument document = await JsonDocument
                 .ParseAsync(stream, cancellationToken: cancellationToken)
                 .ConfigureAwait(false);
@@ -78,9 +88,15 @@ namespace ContentImporter.Application.ContentProviders.WordPress
                 {
                     // Raw JSON of one item. The provider adapter resolved by ProviderCode
                     // is what later parses this into Fields.
+                    //
+                    // fable5: --st*
+                    // 单个 item 的 raw JSON。之后由 ProviderCode 解析出的 provider adapter
+                    // 负责把它 parse 成 Fields。
+                    // *en--
                     Content = item.GetRawText(),
 
                     // Which export this came from, so an error names a file rather than a guess.
+                    // fable5: --st* 记录这个 item 来自哪份 export，这样报错时能点名具体文件，而不是靠猜。 *en--
                     Fields = new Dictionary<string, string> { ["sourceFile"] = export.Name }
                 };
             }

@@ -63,6 +63,7 @@ public sealed class SqliteContentRepositoryTests
         Assert.False(await repository.UpsertAsync(Item("201", "Corrected title")));
 
         // One row, carrying the newer values - this is the idempotency claim.
+        // fable5: --st* 只有一行，并且带的是较新的值 —— 这就是幂等性（idempotency）主张的内容。 *en--
         Assert.Equal(1, await repository.CountAsync());
 
         ContentItem? stored = await repository.GetAsync("wordpress:201");
@@ -85,6 +86,11 @@ public sealed class SqliteContentRepositoryTests
     {
         // The pipeline runs N consumers against one repository instance. SQLite takes one
         // writer at a time, so this is the test that would catch the serialization going wrong.
+        //
+        // fable5: --st*
+        // pipeline 会用 N 个 consumers 对着同一个 repository 实例运行。SQLite 同一时间
+        // 只接受一个写入者，所以如果串行化（serialization）出了问题，就是这个测试来抓。
+        // *en--
         using SqliteContentRepository repository = new();
 
         IEnumerable<Task> writes = Enumerable
@@ -108,6 +114,7 @@ public sealed class SqliteContentRepositoryTests
         bool[] results = await Task.WhenAll(writes);
 
         // Exactly one writer saw it as new, however the 100 were interleaved.
+        // fable5: --st* 无论这 100 次写入如何交错，恰好只有一个写入者把它视为新条目。 *en--
         Assert.Single(results, wasNew => wasNew);
         Assert.Equal(1, await repository.CountAsync());
     }

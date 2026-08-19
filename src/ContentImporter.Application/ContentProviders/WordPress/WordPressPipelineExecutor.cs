@@ -12,6 +12,11 @@ namespace ContentImporter.Application.ContentProviders.WordPress
 
         // '=' not '=>'. An expression-bodied property would construct a new serializer on every
         // read of the field, silently, once per item.
+        //
+        // fable5: --st*
+        // 用 '=' 而不是 '=>'。expression-bodied property 会在每次读取这个字段时
+        // 悄悄地新建一个 serializer —— 每个 item 都建一次。
+        // *en--
         private readonly WordPressDtoSerializer serializer = new();
 
         private readonly WordPressDtoValidator validator = new WordPressDtoValidator();
@@ -26,6 +31,7 @@ namespace ContentImporter.Application.ContentProviders.WordPress
         public async Task<ValidationOutcome> ValidateDtoAsync()
         {
             // DeserializeDtoAsync has to run first - there is nothing to validate otherwise.
+            // fable5: --st* 必须先执行 DeserializeDtoAsync —— 否则根本没有东西可 validate。 *en--
             return dto is null
                 ? new ValidationOutcome(["nothing to validate: DeserializeDtoAsync did not run"])
                 : await validator.ValidateAsync(dto);
@@ -34,6 +40,7 @@ namespace ContentImporter.Application.ContentProviders.WordPress
         public async Task<ContentItem> DtoMapEntityAsync()
         {
             // DeserializeDtoAsync and ValidateDtoAsync have to run first.
+            // fable5: --st* 必须先执行 DeserializeDtoAsync 和 ValidateDtoAsync。 *en--
             if (dto is null)
             {
                 throw new InvalidOperationException("DTO is not initialized.");

@@ -10,6 +10,7 @@ namespace ContentImporter.Infrastructure.Repositories
     public sealed class InMemoryContentRepository : IContentRepository
     {
         // ConcurrentDictionary, not Dictionary + lock: every consumer writes to this at once.
+        // fable5: --st* 用 ConcurrentDictionary 而不是 Dictionary + lock：所有 consumer 会同时写入它。 *en--
         private readonly ConcurrentDictionary<string, ContentItem> _items = new();
 
         public int Count => _items.Count;
@@ -22,6 +23,11 @@ namespace ContentImporter.Infrastructure.Repositories
 
             // TryAdd tells us whether it was new; AddOrUpdate would overwrite without saying.
             // Doing both keeps the upsert honest: re-importing overwrites, and reports it.
+            //
+            // fable5: --st*
+            // TryAdd 能告诉我们它是不是新条目；AddOrUpdate 会直接覆盖却什么都不说。
+            // 两步都做才让 upsert 诚实：re-import 会覆盖，并且如实报告。
+            // *en--
             var isNew = _items.TryAdd(item.Id, item);
 
             if (!isNew)

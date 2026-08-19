@@ -41,6 +41,11 @@ public sealed class WordPressDtoEntityMapperTests
     {
         // This is the key ContentPublisher de-duplicates on, so mapping the same item twice
         // has to produce the same string both times. A generated id would not.
+        //
+        // fable5: --st*
+        // 这是 ContentPublisher 用来去重的 key，所以对同一个 item map 两次
+        // 必须得到相同的字符串。生成式（generated）的 id 做不到这一点。
+        // *en--
         ContentItem first = await Mapper.MapAsync(PublishedPost);
         ContentItem second = await Mapper.MapAsync(PublishedPost);
 
@@ -52,6 +57,7 @@ public sealed class WordPressDtoEntityMapperTests
     public async Task Gmt_text_becomes_an_instant_at_zero_offset()
     {
         // post_date_gmt has no "T" and no offset, so the offset must be supplied, not inferred.
+        // fable5: --st* post_date_gmt 没有 "T" 也没有 offset，所以 offset 必须由我们显式提供，而不是推断。 *en--
         ContentItem item = await Mapper.MapAsync(PublishedPost);
 
         Assert.Equal(new DateTimeOffset(2026, 1, 4, 0, 0, 0, TimeSpan.Zero), item.PublishedAt);
@@ -66,6 +72,11 @@ public sealed class WordPressDtoEntityMapperTests
     {
         // The DTO keeps dates as text so a draft does not fail deserialization; turning the
         // unusable ones into null is this layer's job.
+        //
+        // fable5: --st*
+        // DTO 把日期保留为文本，这样 draft 不会在 deserialization 阶段就失败；
+        // 把不可用的日期变成 null，是这一层的职责。
+        // *en--
         ContentItem item = await Mapper.MapAsync(PublishedPost with { PostDateGmt = postDateGmt });
 
         Assert.Null(item.PublishedAt);
@@ -95,6 +106,7 @@ public sealed class WordPressDtoEntityMapperTests
     public async Task Post_type_casing_is_flattened()
     {
         // "Page" and "page" are not two different kinds of content.
+        // fable5: --st* "Page" 和 "page" 不是两种不同的 content。 *en--
         ContentItem item = await Mapper.MapAsync(PublishedPost with { PostType = "Page" });
 
         Assert.Equal("page", item.ContentType);

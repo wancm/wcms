@@ -33,6 +33,11 @@ public sealed class WordPressDtoValidatorTests
     {
         // WXR exports images as items with post_type "attachment" and status "inherit".
         // They are not published, so the publish-date rule must not apply to them.
+        //
+        // fable5: --st*
+        // WXR 把图片导出为 post_type 是 "attachment"、status 是 "inherit" 的 items。
+        // 它们并未发布，所以 publish-date 规则不得作用在它们身上。
+        // *en--
         WordPressDto attachment = ValidPost with
         {
             PostId = 301,
@@ -83,6 +88,7 @@ public sealed class WordPressDtoValidatorTests
     public async Task Every_status_wordpress_can_export_is_recognised(string status)
     {
         // Drafts carry no usable date, so only "publish" is paired with one here.
+        // fable5: --st* draft 没有可用的日期，所以这里只有 "publish" 状态会配上日期。 *en--
         WordPressDto item = ValidPost with
         {
             Status = status,
@@ -112,6 +118,11 @@ public sealed class WordPressDtoValidatorTests
     {
         // The serializer deliberately keeps this literal as text rather than failing to parse it,
         // which makes rejecting it this layer's job.
+        //
+        // fable5: --st*
+        // serializer 刻意把这个字面量保留为文本而不是解析失败，
+        // 因此拒绝它就成了这一层（validator）的职责。
+        // *en--
         Assert.False((await Validator.ValidateAsync(ValidPost with { PostDateGmt = "0000-00-00 00:00:00" })).IsValid);
     }
 
